@@ -11,6 +11,7 @@ import { v4 as uuidV4 } from "uuid";
 import { VacationStatusEnum } from "./VacationStatusEnum";
 import toast from "react-hot-toast";
 import { Box } from "@mui/material";
+import { UserRole } from "../../interfaces/types";
 
 const VacationBooking = ({ user }: any) => {
   const [events, setEvents] = useState<any>([]);
@@ -193,8 +194,8 @@ const VacationBooking = ({ user }: any) => {
           }}
           initialDate={new Date()}
           businessHours={true}
-          editable={true}
-          selectable={true}
+          editable={user && user.role === UserRole.Admin ? true : false}
+          selectable={user && user.role === UserRole.Admin ? true : false}
           initialView={"dayGridMonth"}
           select={handleSelect}
           events={events}
