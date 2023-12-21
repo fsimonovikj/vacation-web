@@ -47,7 +47,12 @@ const SignInScreen = () => {
               alt="Pixaera"
             /> */}
             <Col
-              style={{ lineHeight: "0.2rem", margin: "auto", marginLeft: "0" }}
+              style={{
+                lineHeight: "0.2rem",
+                margin: "auto",
+                marginLeft: "0",
+                color: "aliceblue",
+              }}
             >
               <h1>{process.env.REACT_APP_COMPANY_NAME}</h1>
               <p>Software Development Services</p>
@@ -57,7 +62,7 @@ const SignInScreen = () => {
             <Col style={{ width: "70%", position: "absolute", bottom: 0 }}>
               <h2
                 style={{
-                  color: "#000000",
+                  color: "aliceblue",
                   lineHeight: "35px",
                   margin: 0,
                 }}

@@ -94,6 +94,7 @@ const VacationBooking = ({ user }: any) => {
   }, []);
 
   const handleSelect = (selectInfo: any) => {
+    console.log(`selectInfo`, selectInfo);
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Set current time to 00:00:00
 
@@ -137,17 +138,17 @@ const VacationBooking = ({ user }: any) => {
           status: VacationStatusEnum.Pending,
           editable: true,
         };
-        console.log(`newEvent: `, newEvent);
-        console.log(`Baranje ke bidne isprateno`, newEvent);
+
         // setEvents([...events, newEvent]);
 
+        // eslint-disable-next-line
         const dbRequest = axiosApi
           .post("/booking-days", newEvent)
           .then((res) => {
             console.log(res.data);
           });
 
-        // console.log(`request sending...`);
+        // eslint-disable-next-line
         const emailRequest = axiosApi
           .post("/booking-requests", newEvent)
           .then((res) => {
@@ -195,7 +196,7 @@ const VacationBooking = ({ user }: any) => {
           initialDate={new Date()}
           businessHours={true}
           editable={user && user.role === UserRole.Admin ? true : false}
-          selectable={user && user.role === UserRole.Admin ? true : false}
+          selectable={true}
           initialView={"dayGridMonth"}
           select={handleSelect}
           events={events}

@@ -48,9 +48,10 @@ const EnterPassword = () => {
                   lineHeight: "0.2rem",
                   margin: "auto",
                   marginLeft: "0",
+                  color: "aliceblue",
                 }}
               >
-                <h2>{process.env.REACT_APP_COMPANY_NAME}</h2>
+                <h1>{process.env.REACT_APP_COMPANY_NAME}</h1>
                 <p>Software Development Services</p>
               </Col>
             </Row>
@@ -72,7 +73,7 @@ const EnterPassword = () => {
                         readOnly
                         hidden
                         disabled
-                        style={{ cursor: "default" }}
+                        style={{ cursor: "default", color: "aliceblue" }}
                         placeholder="name@example.com"
                         className="login-form-input-readonly"
                         value={email ?? ""}
