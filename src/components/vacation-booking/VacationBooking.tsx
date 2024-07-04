@@ -17,6 +17,7 @@ const VacationBooking = ({ user }: any) => {
   const [events, setEvents] = useState<any>([]);
   const calendarRef = useRef(null);
   const vacationNumber: any = localStorage.getItem("x-number") || 0;
+  // eslint-disable-next-line
   const [holidays, setHolidays] = useState<any>([]);
 
   useEffect(() => {

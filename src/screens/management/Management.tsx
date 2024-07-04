@@ -59,7 +59,7 @@ const Management = () => {
   const handleSubmit = async () => {
     try {
       console.log(`creating vacation solution`);
-      const res = await axios.post(`http://localhost:3000/vacation-solution`, {
+      await axios.post(`http://localhost:3000/vacation-solution`, {
         id: "8b9b8090-bbcd-4ebc-8f54-a4622079b200",
         title: "test",
         start: "2023-06-01",
