@@ -2,8 +2,7 @@ interface AdminWebConfig {
   apiBaseUrl: string;
 }
 
-let env: any =
-  process.env.REACT_APP_ENVIRONMENT ?? process.env.REACT_APP_PIXAERA_ENV;
+let env: any = process.env.REACT_APP_ENVIRONMENT ?? "local";
 
 let webConfig: AdminWebConfig;
 

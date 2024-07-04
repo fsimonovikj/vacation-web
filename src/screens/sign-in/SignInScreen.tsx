@@ -23,10 +23,6 @@ const SignInScreen = () => {
     });
   }, [email, form]);
 
-  if (email) {
-    console.log(`email`, email);
-  }
-
   return (
     <Layout
       style={{

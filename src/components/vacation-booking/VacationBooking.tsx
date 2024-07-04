@@ -17,51 +17,24 @@ const VacationBooking = ({ user }: any) => {
   const [events, setEvents] = useState<any>([]);
   const calendarRef = useRef(null);
   const vacationNumber: any = localStorage.getItem("x-number") || 0;
+  const [holidays, setHolidays] = useState<any>([]);
 
   useEffect(() => {
-    const fetchHolidays = async () => {
-      // const holidays = await fetchHolidaysForMonth(); // Replace with your own function to fetch holidays
-      const holidays = [
-        {
-          title: "Off day",
-          description: "Holiday description",
-          start: "2023-06-20",
-          end: "2023-06-20",
-        },
-        {
-          title: "Holiday",
-          description: "Holiday description",
-          startAt: "2023-06-24",
-          endAt: "2023-06-24",
-        },
-        {
-          title: "Holiday1",
-          description: "Holiday description",
-          startAt: "2023-06-14",
-          endAt: "2023-06-14",
-        },
-        {
-          title: "Holiday2",
-          description: "Holiday description",
-          startAt: "2023-06-16",
-          endAt: "2023-06-16",
-        },
-        {
-          title: "2th August",
-          description: "Holiday description",
-          startAt: "2023-08-02",
-          endAt: "2023-08-02",
-        },
-      ];
-      const holidayEvents = holidays.map((holiday) => ({
-        title: holiday.title,
-        description: holiday.description,
-        start: holiday.startAt,
-        end: holiday.endAt,
-        allDay: true,
-        classNames: ["holiday-event"],
-      }));
-      setEvents(holidayEvents);
+    const getHolidays = async () => {
+      await axiosApi.get("/holidays").then((res) => {
+        setHolidays(res.data);
+        const holidayEvents = res.data.map((holiday: any) => {
+          return {
+            title: holiday.title,
+            description: holiday.description,
+            start: holiday.start,
+            end: holiday.end,
+            allDay: true,
+            classNames: ["holiday-event"],
+          };
+        });
+        setEvents((events: any) => [...events, ...holidayEvents]);
+      });
     };
 
     const getBookedVacation = async () => {
@@ -89,12 +62,11 @@ const VacationBooking = ({ user }: any) => {
       });
     };
 
-    fetchHolidays();
     getBookedVacation();
+    getHolidays();
   }, []);
 
   const handleSelect = (selectInfo: any) => {
-    console.log(`selectInfo`, selectInfo);
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Set current time to 00:00:00
 
@@ -154,7 +126,7 @@ const VacationBooking = ({ user }: any) => {
           .then((res) => {
             console.log(res.data);
           });
-        console.log(`request sent!`);
+
         toast.success("Барањето е успешно испратено!");
       }
     }

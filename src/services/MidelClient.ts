@@ -24,14 +24,12 @@ class MidelClient {
       .then((response) => {
         if (response.status === 200) {
           setLocalStorageWithExpiry("token", response.data.token);
-          console.log(`response.data: `, response.data);
           const user: UserViewModel = {
             firstName: response.data.user.firstName,
             lastName: response.data.user.lastName,
             role: response.data.user.role,
             email: email,
           };
-          console.log(`user is logged in: `, user);
           localStorage.setItem("user", JSON.stringify(user));
           return user;
         }

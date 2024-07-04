@@ -14,7 +14,6 @@ import { Header } from "../../components/header/Header";
 import { UserViewModel } from "../../interfaces/types";
 import { getLocalStorageWithExpiry } from "../../core/utils/utils";
 import { Typography } from "antd";
-import { AppPathEnum } from "../../enums/path-enum";
 import { useEffect, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -24,6 +23,7 @@ const Management = () => {
   const user: UserViewModel = getLocalStorageWithExpiry("user");
 
   const [isOpen, setIsOpen] = useState(true);
+  // eslint-disable-next-line
   const [data, setData] = useState<any>([]);
 
   const handleToggle = () => {
@@ -66,7 +66,6 @@ const Management = () => {
         end: "2023-06-01",
       });
       console.log(`created vacation solution`);
-      console.log(`RES`, res.data);
     } catch (error) {
       // Handle error if API call fails.
       console.error("Error fetching data:", error);

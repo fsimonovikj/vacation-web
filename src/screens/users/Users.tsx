@@ -4,7 +4,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   Paper,
   Select,
@@ -22,11 +21,13 @@ import { UserViewModel } from "../../interfaces/types";
 import { getLocalStorageWithExpiry } from "../../core/utils/utils";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { v4 as uuidV4 } from "uuid";
 
 const Users = () => {
   const user: UserViewModel = getLocalStorageWithExpiry("user");
 
   const [isOpen, setIsOpen] = useState(true);
+  // eslint-disable-next-line
   const [data, setData] = useState<any>([]);
   const [users, setUsers] = useState<any>([]);
 
@@ -78,6 +79,7 @@ const Users = () => {
       console.log(`Creating user`);
 
       await axios.post(`${process.env.REACT_APP_BACKEND_URL}/users`, {
+        id: uuidV4(),
         firstName: (event.target as any).firstName.value,
         lastName: (event.target as any).lastName.value,
         email: (event.target as any).email.value,
@@ -88,8 +90,9 @@ const Users = () => {
 
       console.log(`Created user successfully`);
       handleClose();
+      fetchUsers();
+      fetchData();
     } catch (error) {
-      // Handle error if API call fails.
       console.error("Error fetching data:", error);
     }
   };
@@ -117,7 +120,20 @@ const Users = () => {
       >
         {/* <VacationBooking user={user} /> */}
 
-        <Button onClick={handleClickOpen}>Create User +</Button>
+        <Button
+          onClick={handleClickOpen}
+          style={{
+            margin: "1% 2.5%",
+            backgroundColor: "#1c1c1c",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            fontSize: "12px",
+            padding: "5px 10px",
+          }}
+        >
+          Create User +
+        </Button>
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Create a new user</DialogTitle>
           <DialogContent>
@@ -181,7 +197,7 @@ const Users = () => {
                 <option value="admin">Admin</option>
               </Select>
 
-              <DialogContentText>Content</DialogContentText>
+              {/* <DialogContentText>Content</DialogContentText> */}
               <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
                 <Button type="submit">Create</Button>
@@ -196,12 +212,17 @@ const Users = () => {
           style={{ margin: "auto", width: "95%", overflowX: "auto" }}
         >
           <Table>
-            <TableHead>
+            <TableHead
+              style={{
+                backgroundColor: "#dfdfdf",
+              }}
+            >
               <TableRow>
                 <TableCell>First Name</TableCell>
                 <TableCell>Last Name</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Role</TableCell>
+                <TableCell>Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -211,6 +232,7 @@ const Users = () => {
                   <TableCell>{user.lastName}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.role}</TableCell>
+                  <TableCell>{user.status}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

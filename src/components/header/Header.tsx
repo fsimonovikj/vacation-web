@@ -5,16 +5,19 @@ import { axiosApi } from "../../screens/main/MainScreen";
 import MidelClient from "../../services/MidelClient";
 import { AppPathEnum } from "../../enums/path-enum";
 import { UserRole } from "../../interfaces/types";
+import { useNavigate } from "react-router-dom";
 
 export const Header = ({ user }: any) => {
   const [vacationDays, setVacationDays] = useState<number>(0);
   const activeMenu = window.location.pathname;
   const client = new MidelClient();
+  const navigate = useNavigate();
 
   async function logout() {
     try {
       await client.logout();
-      window.location.reload();
+      navigate("/");
+      // window.location.reload();
     } catch (error) {
       console.log(error);
     }

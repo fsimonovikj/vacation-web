@@ -59,8 +59,6 @@ const MainScreen = () => {
     getUser();
   }, [tokenData]);
 
-  console.log(`USER`, user);
-
   return (
     <>
       <Box
