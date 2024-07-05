@@ -6,6 +6,7 @@ import MidelClient from "../../services/MidelClient";
 import { AppPathEnum } from "../../enums/path-enum";
 import { UserRole } from "../../interfaces/types";
 import { useNavigate } from "react-router-dom";
+import webConfig from "../../config/config";
 
 export const Header = ({ user }: any) => {
   const [vacationDays, setVacationDays] = useState<number>(0);
@@ -17,7 +18,6 @@ export const Header = ({ user }: any) => {
     try {
       await client.logout();
       navigate("/");
-      // window.location.reload();
     } catch (error) {
       console.log(error);
     }
@@ -30,7 +30,7 @@ export const Header = ({ user }: any) => {
 
     try {
       const response = await axiosApi.get(
-        `${process.env.REACT_APP_BACKEND_URL}/vacation/${user.id}`
+        `${webConfig.apiBaseUrl}/vacation/${user.id}`
       );
       const days = response.data.reduce(
         (totalDays: any, element: any) => totalDays + parseInt(element.days),
