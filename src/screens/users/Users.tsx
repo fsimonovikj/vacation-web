@@ -17,19 +17,25 @@ import {
 } from "@mui/material";
 import "leaflet/dist/leaflet.css";
 import { Header } from "../../components/header/Header";
-import { UserViewModel } from "../../interfaces/types";
+import { UserViewModel, VacationI } from "../../interfaces/types";
 import { getLocalStorageWithExpiry } from "../../core/utils/utils";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { v4 as uuidV4 } from "uuid";
+import webConfig from "../../config/config";
 
-const Users = () => {
+interface UsersPageProps {
+  vacationDays: number;
+  vacations: VacationI[];
+}
+
+const Users = ({ vacationDays, vacations }: UsersPageProps) => {
   const user: UserViewModel = getLocalStorageWithExpiry("user");
 
   const [isOpen, setIsOpen] = useState(true);
   // eslint-disable-next-line
   const [data, setData] = useState<any>([]);
-  const [users, setUsers] = useState<any>([]);
+  const [users, setUsers] = useState<UserViewModel[]>([]);
 
   // eslint-disable-next-line
   const handleToggle = () => {
@@ -38,9 +44,7 @@ const Users = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/vacation/lists`
-      );
+      const res = await axios.get(`${webConfig.apiBaseUrl}/vacation/lists`);
       setData(res.data);
     } catch (error) {
       // Handle error if API call fails.
@@ -50,7 +54,7 @@ const Users = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/users`);
+      const res = await axios.get(`${webConfig.apiBaseUrl}/users`);
       setUsers(res.data);
     } catch (error) {
       // Handle error if API call fails.
@@ -110,7 +114,7 @@ const Users = () => {
           color: "white",
         }}
       >
-        <Header user={user} />
+        <Header user={user} vacationDays={vacationDays} vacations={vacations} />
       </Box>
       <Box
         position="absolute"
@@ -118,8 +122,6 @@ const Users = () => {
         top={0}
         style={{ width: "80%", height: "100%", backgroundColor: "#f5f5f5" }}
       >
-        {/* <VacationBooking user={user} /> */}
-
         <Button
           onClick={handleClickOpen}
           style={{

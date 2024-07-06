@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import VacationBooking from "../../components/vacation-booking/VacationBooking";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
-import { UserViewModel } from "../../interfaces/types";
+import { UserViewModel, VacationI } from "../../interfaces/types";
 import webConfig from "../../config/config";
 
 export const axiosApi = axios.create({
@@ -20,7 +20,12 @@ export const axiosApi = axios.create({
   },
 });
 
-const MainScreen = () => {
+interface MainScreenProps {
+  vacationDays: number;
+  vacations: VacationI[];
+}
+
+const MainScreen = ({ vacationDays, vacations }: MainScreenProps) => {
   const [tokenData, setTokenData] = useState<any>(null);
   const [user, setUser] = useState<UserViewModel>();
 
@@ -67,7 +72,11 @@ const MainScreen = () => {
         top={0}
         style={{ width: "80%", height: "100%", backgroundColor: "#f5f5f5" }}
       >
-        <VacationBooking user={user} />
+        <VacationBooking
+          user={user!}
+          vacationDays={vacationDays}
+          vacations={vacations}
+        />
       </Box>
       <Box
         position="fixed"
@@ -80,7 +89,7 @@ const MainScreen = () => {
           color: "white",
         }}
       >
-        <Header user={user} />
+        <Header user={user} vacationDays={vacationDays} vacations={vacations} />
       </Box>
     </>
   );

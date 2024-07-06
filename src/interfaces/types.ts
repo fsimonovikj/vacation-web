@@ -70,3 +70,23 @@ export interface User {
   status?: string;
   role?: UserRole;
 }
+
+export interface EventI {
+  title: string;
+  description: string;
+  start: Date;
+  end: Date;
+  allDay: boolean;
+  classNames: string;
+}
+
+export interface VacationI {
+  id: string;
+  createdAt: Date;
+  deletedAt: Date | null;
+  title: string;
+  days: any;
+  startAt: Date;
+  endAt: Date;
+  userId: string;
+}

@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { Button } from "antd";
-import { axiosApi } from "../../screens/main/MainScreen";
 import MidelClient from "../../services/MidelClient";
 import { AppPathEnum } from "../../enums/path-enum";
-import { UserRole } from "../../interfaces/types";
+import { UserRole, UserViewModel, VacationI } from "../../interfaces/types";
 import { useNavigate } from "react-router-dom";
-import webConfig from "../../config/config";
 
-export const Header = ({ user }: any) => {
-  const [vacationDays, setVacationDays] = useState<number>(0);
-  const [vacations, setVacations] = useState<any>([]);
+interface HeaderProps {
+  user: UserViewModel | undefined;
+  vacationDays: number;
+  vacations: VacationI[];
+}
+
+export const Header = ({ user, vacationDays, vacations }: HeaderProps) => {
   const activeMenu = window.location.pathname;
   const client = new MidelClient();
   const navigate = useNavigate();
@@ -23,34 +24,6 @@ export const Header = ({ user }: any) => {
       console.log(error);
     }
   }
-
-  const getVacationDays = async () => {
-    if (!user || !user.id) {
-      return;
-    }
-
-    try {
-      const response = await axiosApi.get(
-        `${webConfig.apiBaseUrl}/vacation/${user.id}`
-      );
-
-      const days = response.data.reduce(
-        (totalDays: any, element: any) => totalDays + parseInt(element.days),
-        0
-      );
-
-      setVacationDays(days);
-      setVacations(response.data);
-      localStorage.setItem("x-number", days);
-    } catch (error) {
-      console.error("Error fetching vacation days:", error);
-    }
-  };
-
-  useEffect(() => {
-    getVacationDays();
-    // eslint-disable-next-line
-  }, [user]);
 
   const capitalizeFirstLetter = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);

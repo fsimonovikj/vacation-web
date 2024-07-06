@@ -11,20 +11,30 @@ import { v4 as uuidV4 } from "uuid";
 import { VacationStatusEnum } from "./VacationStatusEnum";
 import toast from "react-hot-toast";
 import { Box } from "@mui/material";
-import { UserRole } from "../../interfaces/types";
+import {
+  EventI,
+  UserRole,
+  UserViewModel,
+  VacationI,
+} from "../../interfaces/types";
 
-const VacationBooking = ({ user }: any) => {
-  const [events, setEvents] = useState<any>([]);
+interface VacationProps {
+  user: UserViewModel;
+  vacationDays: number;
+  vacations: VacationI[];
+}
+
+const VacationBooking = ({ user, vacationDays, vacations }: VacationProps) => {
+  const [events, setEvents] = useState<EventI[]>([]);
   const calendarRef = useRef(null);
   const vacationNumber: any = localStorage.getItem("x-number") || 0;
-  // eslint-disable-next-line
-  const [holidays, setHolidays] = useState<any>([]);
+
+  console.log(`PROPS IN VACATION`, vacationDays, vacations);
 
   useEffect(() => {
     const getHolidays = async () => {
       await axiosApi.get("/holidays").then((res) => {
-        setHolidays(res.data);
-        const holidayEvents = res.data.map((holiday: any) => {
+        const holidayEvents = res.data.map((holiday: EventI) => {
           return {
             title: holiday.title,
             description: holiday.description,
@@ -67,6 +77,8 @@ const VacationBooking = ({ user }: any) => {
     getHolidays();
   }, []);
 
+  console.log(`VACATION NUMBER`, vacationNumber, vacationDays, vacations);
+
   const handleSelect = (selectInfo: any) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Set current time to 00:00:00
@@ -83,6 +95,13 @@ const VacationBooking = ({ user }: any) => {
         count++;
       }
       date.setDate(date.getDate() + 1);
+    }
+
+    if (count > vacations[0].days) {
+      alert(
+        `You cannot book more than ${vacations[0].days} vacation days at a time.`
+      );
+      return;
     }
 
     if (count > vacationNumber) {
@@ -110,6 +129,7 @@ const VacationBooking = ({ user }: any) => {
           lastName: user.lastName,
           status: VacationStatusEnum.Pending,
           editable: true,
+          vacationId: vacations[0].id,
         };
 
         // setEvents([...events, newEvent]);

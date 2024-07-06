@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import "leaflet/dist/leaflet.css";
 import { Header } from "../../components/header/Header";
-import { UserViewModel } from "../../interfaces/types";
+import { UserViewModel, VacationI } from "../../interfaces/types";
 import { getLocalStorageWithExpiry } from "../../core/utils/utils";
 import { Typography } from "antd";
 import { useEffect, useState } from "react";
@@ -19,7 +19,12 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import axios from "axios";
 
-const Management = () => {
+interface ManagementProps {
+  vacationDays: number;
+  vacations: VacationI[];
+}
+
+const Management = ({ vacationDays, vacations }: ManagementProps) => {
   const user: UserViewModel = getLocalStorageWithExpiry("user");
 
   const [isOpen, setIsOpen] = useState(true);
@@ -85,7 +90,7 @@ const Management = () => {
           color: "white",
         }}
       >
-        <Header user={user} />
+        <Header user={user} vacationDays={vacationDays} vacations={vacations} />
       </Box>
       <Box
         position="absolute"
