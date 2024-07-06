@@ -80,11 +80,18 @@ const VacationBooking = ({ user, vacationDays, vacations }: VacationProps) => {
   console.log(`VACATION NUMBER`, vacationNumber, vacationDays, vacations);
 
   const handleSelect = (selectInfo: any) => {
+    if (!vacationDays) {
+      toast.error(
+        "You cannot book vacation in the moment, please try again later."
+      );
+      return;
+    }
+
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Set current time to 00:00:00
 
     if (selectInfo.start < today) {
-      alert("You cannot book dates before today.");
+      toast.error("You cannot book dates before today.");
       return;
     }
 
@@ -97,15 +104,15 @@ const VacationBooking = ({ user, vacationDays, vacations }: VacationProps) => {
       date.setDate(date.getDate() + 1);
     }
 
-    if (count > vacations[0].days) {
-      alert(
+    if (vacations && count > vacations[0].days) {
+      toast.error(
         `You cannot book more than ${vacations[0].days} vacation days at a time.`
       );
       return;
     }
 
     if (count > vacationNumber) {
-      alert(
+      toast.error(
         `You cannot book more than ${vacationNumber} vacation days at a time.`
       );
       return;
