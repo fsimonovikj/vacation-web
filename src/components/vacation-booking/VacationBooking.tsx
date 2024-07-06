@@ -129,7 +129,6 @@ const VacationBooking = ({ user, vacationDays, vacations }: VacationProps) => {
           lastName: user.lastName,
           status: VacationStatusEnum.Pending,
           editable: true,
-          vacationId: vacations[0].id,
         };
 
         // setEvents([...events, newEvent]);
