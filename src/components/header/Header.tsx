@@ -10,6 +10,7 @@ import webConfig from "../../config/config";
 
 export const Header = ({ user }: any) => {
   const [vacationDays, setVacationDays] = useState<number>(0);
+  const [vacations, setVacations] = useState<any>([]);
   const activeMenu = window.location.pathname;
   const client = new MidelClient();
   const navigate = useNavigate();
@@ -32,12 +33,14 @@ export const Header = ({ user }: any) => {
       const response = await axiosApi.get(
         `${webConfig.apiBaseUrl}/vacation/${user.id}`
       );
+
       const days = response.data.reduce(
         (totalDays: any, element: any) => totalDays + parseInt(element.days),
         0
       );
 
       setVacationDays(days);
+      setVacations(response.data);
       localStorage.setItem("x-number", days);
     } catch (error) {
       console.error("Error fetching vacation days:", error);
@@ -165,6 +168,15 @@ export const Header = ({ user }: any) => {
                     remaining days : {vacationDays}
                   </h3>
                 </h3>
+                <Box style={{ textAlign: "center", marginTop: "1rem" }}>
+                  {vacations.map((vacation: any) => (
+                    <div key={vacation.id}>
+                      <p>
+                        {vacation.title}: {vacation.days} days
+                      </p>
+                    </div>
+                  ))}
+                </Box>
               </Box>
               <Box style={{ textAlign: "center", marginTop: "2rem" }}>
                 <h3>
