@@ -2,7 +2,7 @@ interface AdminWebConfig {
   apiBaseUrl: string;
 }
 
-let env: any = process.env.REACT_APP_ENVIRONMENT ?? "local";
+let env: any = process.env.REACT_APP_ENVIRONMENT ?? "production";
 
 let webConfig: AdminWebConfig;
 
