@@ -29,7 +29,7 @@ switch (env) {
     break;
   default:
     webConfig = {
-      apiBaseUrl: "https://localhost:3000",
+      apiBaseUrl: "http://10.1.1.43:3000",
     };
 }
 
