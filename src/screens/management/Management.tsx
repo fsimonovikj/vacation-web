@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import axios from "axios";
+import webConfig from "../../config/config";
 
 interface ManagementProps {
   vacationDays: number;
@@ -37,9 +38,7 @@ const Management = ({ vacationDays, vacations }: ManagementProps) => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/vacation/lists`
-      );
+      const res = await axios.get(`${webConfig.apiBaseUrl}/vacation/lists`);
       setData(res.data);
     } catch (error) {
       // Handle error if API call fails.

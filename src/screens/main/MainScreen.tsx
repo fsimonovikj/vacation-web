@@ -43,7 +43,7 @@ const MainScreen = ({ vacationDays, vacations }: MainScreenProps) => {
     const getUser = async () => {
       if (tokenData && tokenData.id) {
         await axiosApi
-          .get(`${process.env.REACT_APP_BACKEND_URL}/users/${tokenData.id}`)
+          .get(`${webConfig.apiBaseUrl}/users/${tokenData.id}`)
           .then((res) => {
             const user: UserViewModel = {
               id: tokenData.id,

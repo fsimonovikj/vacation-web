@@ -82,7 +82,7 @@ const Users = ({ vacationDays, vacations }: UsersPageProps) => {
     try {
       console.log(`Creating user`);
 
-      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/users`, {
+      await axios.post(`${webConfig.apiBaseUrl}/users`, {
         id: uuidV4(),
         firstName: (event.target as any).firstName.value,
         lastName: (event.target as any).lastName.value,
