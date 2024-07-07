@@ -90,3 +90,13 @@ export interface VacationI {
   endAt: Date;
   userId: string;
 }
+
+export interface VacationPlanI {
+  id: string;
+  createdAt: Date;
+  deletedAt: Date | null;
+  title: string;
+  start: Date;
+  end: Date;
+  days: number;
+}

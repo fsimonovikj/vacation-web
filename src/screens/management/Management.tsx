@@ -5,13 +5,16 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   TextField,
 } from "@mui/material";
 import "leaflet/dist/leaflet.css";
 import { Header } from "../../components/header/Header";
-import { UserViewModel, VacationI } from "../../interfaces/types";
+import {
+  UserViewModel,
+  VacationI,
+  VacationPlanI,
+} from "../../interfaces/types";
 import { getLocalStorageWithExpiry } from "../../core/utils/utils";
 import { Typography } from "antd";
 import { useEffect, useState } from "react";
@@ -19,6 +22,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import axios from "axios";
 import webConfig from "../../config/config";
+import { v4 as uuidV4 } from "uuid";
 
 interface ManagementProps {
   vacationDays: number;
@@ -27,22 +31,18 @@ interface ManagementProps {
 
 const Management = ({ vacationDays, vacations }: ManagementProps) => {
   const user: UserViewModel = getLocalStorageWithExpiry("user");
-
-  const [isOpen, setIsOpen] = useState(true);
-  // eslint-disable-next-line
-  const [data, setData] = useState<any>([]);
-
-  const handleToggle = () => {
-    setIsOpen(!isOpen);
-  };
+  const [data, setData] = useState<VacationPlanI[]>([]);
+  const [open, setOpen] = useState(false);
+  const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
 
   const fetchData = async () => {
     try {
-      const res = await axios.get(`${webConfig.apiBaseUrl}/vacation/lists`);
+      const res = await axios.get(
+        `${webConfig.apiBaseUrl}/vacation-plan/lists`
+      );
       setData(res.data);
     } catch (error) {
-      // Handle error if API call fails.
-      console.error("Error fetching data:", error);
+      console.log(`Error fetching data`, error);
     }
   };
 
@@ -50,7 +50,12 @@ const Management = ({ vacationDays, vacations }: ManagementProps) => {
     fetchData();
   }, []);
 
-  const [open, setOpen] = useState(false);
+  const handleToggle = (id: string) => {
+    setOpenItems((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id],
+    }));
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -60,22 +65,23 @@ const Management = ({ vacationDays, vacations }: ManagementProps) => {
     setOpen(false);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     try {
-      console.log(`creating vacation solution`);
-      await axios.post(`http://localhost:3000/vacation-solution`, {
-        id: "8b9b8090-bbcd-4ebc-8f54-a4622079b200",
-        title: "test",
-        start: "2023-06-01",
-        end: "2023-06-01",
+      await axios.post(`${webConfig.apiBaseUrl}/vacation-plan`, {
+        id: uuidV4(),
+        title: (event.target as any).title.value,
+        start: (event.target as any).start.value,
+        end: (event.target as any).end.value,
+        days: (event.target as any).days.value,
       });
-      console.log(`created vacation solution`);
+
+      console.log(`Created vacation successfully`);
+      handleClose();
     } catch (error) {
-      // Handle error if API call fails.
       console.error("Error fetching data:", error);
     }
   };
-
   return (
     <>
       <Box
@@ -97,217 +103,167 @@ const Management = ({ vacationDays, vacations }: ManagementProps) => {
         top={0}
         style={{ width: "80%", height: "100%", backgroundColor: "#f5f5f5" }}
       >
-        {/* <VacationBooking user={user} /> */}
-
-        <Button onClick={handleClickOpen}>Create +</Button>
+        <Button
+          onClick={handleClickOpen}
+          style={{
+            margin: "1% 2.5%",
+            backgroundColor: "#1c1c1c",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            fontSize: "12px",
+            padding: "5px 10px",
+          }}
+        >
+          Create Vacation +
+        </Button>
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Create a new vacation</DialogTitle>
           <DialogContent>
             {/* vacation-solution */}
-            <form onClick={handleSubmit}>
+            <form onSubmit={handleSubmit}>
               <TextField
                 autoFocus
                 margin="dense"
-                id="name"
-                label="Name"
+                id="title"
+                name="title"
+                label="Title"
                 type="text"
+                required
                 fullWidth
               />
               <TextField
                 autoFocus
                 margin="dense"
                 id="start"
+                name="start"
                 label="Start"
+                placeholder="2024-05-31 (YYYY-MM-DD)"
                 type="text"
-                placeholder="2023-06-01 (YYYY-MM-DD)"
+                required
                 fullWidth
               />
               <TextField
                 autoFocus
                 margin="dense"
                 id="end"
+                name="end"
                 label="End"
-                type="text"
                 placeholder="2024-05-31 (YYYY-MM-DD)"
+                type="text"
+                required
                 fullWidth
               />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="days"
+                name="days"
+                label="Days"
+                type="number"
+                required
+                fullWidth
+              />
+
+              {/* <DialogContentText>Content</DialogContentText> */}
+              <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button type="submit">Create</Button>
+              </DialogActions>
             </form>
-            <DialogContentText>Content</DialogContentText>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleClose}>Create</Button>
-          </DialogActions>
         </Dialog>
 
-        {/* ODMORI */}
         <Box
           style={{
-            width: "98%",
+            width: "96%",
             height: "100%",
             backgroundColor: "#f5f5f5",
-            padding: "1rem",
+            padding: "0 2%",
           }}
         >
-          <Box
-            style={{
-              border: "1px solid #ababab",
-              backgroundColor: "white",
-              borderRadius: "16px",
-              padding: "0.5rem",
-            }}
-          >
-            <Typography
-              onClick={handleToggle}
+          {data.map((vacation) => (
+            <Box
+              key={vacation.id}
               style={{
-                display: "flex",
-                // justifyContent: "space-between",
-                alignItems: "center",
-                cursor: "pointer",
-                padding: "0.4rem",
-                fontSize: "18px",
-                fontWeight: "bold",
+                border: "1px solid #ababab",
+                backgroundColor: "white",
+                borderRadius: "8px",
+                padding: "0.5rem",
+                margin: "0.5rem",
               }}
             >
-              {isOpen ? <ExpandMoreIcon /> : <ExpandLessIcon />} Year: 2023
-            </Typography>
-
-            <Collapse in={isOpen}>
-              <Box
-                sx={{
+              <Typography
+                onClick={() => handleToggle(vacation.id)}
+                style={{
                   display: "flex",
-                  flexWrap: "wrap",
-                  width: "100% !important",
+                  // justifyContent: "space-between",
+                  alignItems: "center",
+                  cursor: "pointer",
+                  padding: "0.4rem",
+                  fontSize: "18px",
+                  fontWeight: "bold",
                 }}
               >
-                <Box
-                  sx={{
-                    width: "13%",
-                    padding: "2%",
-                    backgroundColor: "white",
-                    borderRadius: "5px",
-                    boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
-                    margin: "1.5%",
+                {vacation.title}
+                <span
+                  style={{
+                    color: "grey",
+                    fontSize: "12px",
+                    display: "flex",
+                    marginLeft: "auto",
+                    paddingRight: "1rem",
                   }}
                 >
-                  <Typography.Title
-                    level={5}
-                    style={{
-                      textAlign: "center",
-                      margin: 0,
-                      paddingBottom: "1.5rem",
-                    }}
-                  >
-                    Filip Simonovikj
-                  </Typography.Title>
-                  <Typography.Text>
-                    <span style={{ fontWeight: "bold" }}>Remaining days:</span>{" "}
-                    21
-                  </Typography.Text>
-                </Box>
+                  {vacation.days} days
+                </span>
+                {openItems[vacation.id] ? (
+                  <ExpandMoreIcon />
+                ) : (
+                  <ExpandLessIcon />
+                )}{" "}
+              </Typography>
+
+              <Collapse in={openItems[vacation.id]}>
                 <Box
                   sx={{
-                    width: "13%",
-                    padding: "2%",
-                    backgroundColor: "white",
-                    borderRadius: "5px",
-                    boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
-                    margin: "1.5%",
+                    display: "flex",
+                    flexWrap: "wrap",
+                    width: "100% !important",
                   }}
                 >
-                  <Typography.Title
-                    level={5}
-                    style={{
-                      textAlign: "center",
-                      margin: 0,
-                      paddingBottom: "1.5rem",
+                  {/* TODO: modified this in the dynamic */}
+                  <Box
+                    sx={{
+                      width: "13%",
+                      padding: "2%",
+                      backgroundColor: "white",
+                      borderRadius: "5px",
+                      boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
+                      margin: "1.5%",
                     }}
                   >
-                    Filip Simonovikj
-                  </Typography.Title>
-                  <Typography.Text>
-                    <span style={{ fontWeight: "bold" }}>Remaining days:</span>{" "}
-                    21
-                  </Typography.Text>
+                    <Typography.Title
+                      level={5}
+                      style={{
+                        textAlign: "center",
+                        margin: 0,
+                        paddingBottom: "1.5rem",
+                      }}
+                    >
+                      Filip Simonovikj
+                    </Typography.Title>
+                    <Typography.Text>
+                      <span style={{ fontWeight: "bold" }}>
+                        Remaining days:
+                      </span>{" "}
+                      21
+                    </Typography.Text>
+                  </Box>
                 </Box>
-                <Box
-                  sx={{
-                    width: "13%",
-                    padding: "2%",
-                    backgroundColor: "white",
-                    borderRadius: "5px",
-                    boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
-                    margin: "1.5%",
-                  }}
-                >
-                  <Typography.Title
-                    level={5}
-                    style={{
-                      textAlign: "center",
-                      margin: 0,
-                      paddingBottom: "1.5rem",
-                    }}
-                  >
-                    Filip Simonovikj
-                  </Typography.Title>
-                  <Typography.Text>
-                    <span style={{ fontWeight: "bold" }}>Remaining days:</span>{" "}
-                    21
-                  </Typography.Text>
-                </Box>
-                <Box
-                  sx={{
-                    width: "13%",
-                    padding: "2%",
-                    backgroundColor: "white",
-                    borderRadius: "5px",
-                    boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
-                    margin: "1.5%",
-                  }}
-                >
-                  <Typography.Title
-                    level={5}
-                    style={{
-                      textAlign: "center",
-                      margin: 0,
-                      paddingBottom: "1.5rem",
-                    }}
-                  >
-                    Filip Simonovikj
-                  </Typography.Title>
-                  <Typography.Text>
-                    <span style={{ fontWeight: "bold" }}>Remaining days:</span>{" "}
-                    21
-                  </Typography.Text>
-                </Box>
-                <Box
-                  sx={{
-                    width: "13%",
-                    padding: "2%",
-                    backgroundColor: "white",
-                    borderRadius: "5px",
-                    boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
-                    margin: "1.5%",
-                  }}
-                >
-                  <Typography.Title
-                    level={5}
-                    style={{
-                      textAlign: "center",
-                      margin: 0,
-                      paddingBottom: "1.5rem",
-                    }}
-                  >
-                    Filip Simonovikj
-                  </Typography.Title>
-                  <Typography.Text>
-                    <span style={{ fontWeight: "bold" }}>Remaining days:</span>{" "}
-                    21
-                  </Typography.Text>
-                </Box>
-              </Box>
-            </Collapse>
-          </Box>
+              </Collapse>
+            </Box>
+          ))}
         </Box>
       </Box>
     </>
