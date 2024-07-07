@@ -85,14 +85,13 @@ const VacationBooking = ({ user, vacationDays, vacations }: VacationProps) => {
   }, []);
 
   const handleSelect = (selectInfo: any) => {
-    console.log(new Date(vacations[0].startAt).getTime(), new Date().getTime());
-    if (vacations && new Date(vacations[0].startAt) > new Date()) {
-      toast.error(getLocalizedMessage(BOOKING_BEFORE_START_VACATION));
+    if (!vacations || !vacationDays) {
+      toast.error(getLocalizedMessage(CANNOT_BOOK_IN_MOMENT));
       return;
     }
 
-    if (!vacationDays) {
-      toast.error(getLocalizedMessage(CANNOT_BOOK_IN_MOMENT));
+    if (vacations && new Date(vacations[0].startAt) > new Date()) {
+      toast.error(getLocalizedMessage(BOOKING_BEFORE_START_VACATION));
       return;
     }
 
