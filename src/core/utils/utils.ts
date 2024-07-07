@@ -38,3 +38,8 @@ export function removeLocalStorage(key: any) {
 
   return `Successfully removed ${key} from storage..`;
 }
+
+export const getLocalizedMessage = (messages: any) => {
+  const localisation = process.env.REACT_APP_LOCALISATION || "en"; // This should be dynamic and based on user's locale
+  return messages[localisation] || messages["en"]; // Default to 'en' if locale not found
+};

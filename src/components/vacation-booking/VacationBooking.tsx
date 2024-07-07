@@ -17,6 +17,15 @@ import {
   UserViewModel,
   VacationI,
 } from "../../interfaces/types";
+import {
+  BOOK_IN_PAST,
+  BOOKING_BEFORE_START_VACATION,
+  CANNOT_BOOK_IN_MOMENT,
+  REQUEST_MUCH_VACATION_DAYS,
+  REQUEST_SENT_EXPLANATION,
+  REQUEST_SENT_SUCCESSFULLY,
+} from "../../core/messages";
+import { getLocalizedMessage } from "../../core/utils/utils";
 
 interface VacationProps {
   user: UserViewModel;
@@ -28,8 +37,6 @@ const VacationBooking = ({ user, vacationDays, vacations }: VacationProps) => {
   const [events, setEvents] = useState<EventI[]>([]);
   const calendarRef = useRef(null);
   const vacationNumber: any = localStorage.getItem("x-number") || 0;
-
-  console.log(`PROPS IN VACATION`, vacationDays, vacations);
 
   useEffect(() => {
     const getHolidays = async () => {
@@ -77,13 +84,15 @@ const VacationBooking = ({ user, vacationDays, vacations }: VacationProps) => {
     getHolidays();
   }, []);
 
-  console.log(`VACATION NUMBER`, vacationNumber, vacationDays, vacations);
-
   const handleSelect = (selectInfo: any) => {
+    console.log(new Date(vacations[0].startAt).getTime(), new Date().getTime());
+    if (vacations && new Date(vacations[0].startAt) > new Date()) {
+      toast.error(getLocalizedMessage(BOOKING_BEFORE_START_VACATION));
+      return;
+    }
+
     if (!vacationDays) {
-      toast.error(
-        "You cannot book vacation in the moment, please try again later."
-      );
+      toast.error(getLocalizedMessage(CANNOT_BOOK_IN_MOMENT));
       return;
     }
 
@@ -91,7 +100,7 @@ const VacationBooking = ({ user, vacationDays, vacations }: VacationProps) => {
     today.setHours(0, 0, 0, 0); // Set current time to 00:00:00
 
     if (selectInfo.start < today) {
-      toast.error("You cannot book dates before today.");
+      toast.error(getLocalizedMessage(BOOK_IN_PAST));
       return;
     }
 
@@ -105,21 +114,18 @@ const VacationBooking = ({ user, vacationDays, vacations }: VacationProps) => {
     }
 
     if (vacations && count > vacations[0].days) {
-      toast.error(
-        `You cannot book more than ${vacations[0].days} vacation days at a time.`
-      );
+      toast.error(getLocalizedMessage(REQUEST_MUCH_VACATION_DAYS));
       return;
     }
 
     if (count > vacationNumber) {
-      toast.error(
-        `You cannot book more than ${vacationNumber} vacation days at a time.`
-      );
+      toast.error(getLocalizedMessage(REQUEST_MUCH_VACATION_DAYS));
+
       return;
     }
 
     if (count > 0) {
-      const title = prompt("Пиши зашто тражиш одмор и куде ке идеш:");
+      const title = prompt(getLocalizedMessage(REQUEST_SENT_EXPLANATION));
 
       if (title) {
         const newEvent = {
@@ -142,20 +148,16 @@ const VacationBooking = ({ user, vacationDays, vacations }: VacationProps) => {
         // setEvents([...events, newEvent]);
 
         // eslint-disable-next-line
-        const dbRequest = axiosApi
-          .post("/booking-days", newEvent)
-          .then((res) => {
-            console.log(res.data);
-          });
+        axiosApi.post("/booking-days", newEvent).then((res) => {
+          console.log(res.data);
+        });
 
         // eslint-disable-next-line
-        const emailRequest = axiosApi
-          .post("/booking-requests", newEvent)
-          .then((res) => {
-            console.log(res.data);
-          });
+        axiosApi.post("/booking-requests", newEvent).then((res) => {
+          console.log(res.data);
+        });
 
-        toast.success("Барањето е успешно испратено!");
+        toast.success(getLocalizedMessage(REQUEST_SENT_SUCCESSFULLY));
       }
     }
   };
