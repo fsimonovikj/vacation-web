@@ -9,12 +9,12 @@ let webConfig: AdminWebConfig;
 switch (env) {
   case "local":
     webConfig = {
-      apiBaseUrl: "http://localhost:3000",
+      apiBaseUrl: "http://10.1.1.43:3000",
     };
     break;
   case "development":
     webConfig = {
-      apiBaseUrl: "http://10.1.1.43:3000",
+      apiBaseUrl: "http://local:3000",
     };
     break;
   case "staging":
