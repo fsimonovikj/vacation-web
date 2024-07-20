@@ -130,11 +130,11 @@ const EnterPassword = () => {
                       />
                     </Form.Item>
                   )}
-                  <Row style={{ marginTop: 30 }}>
+                  {/* <Row style={{ marginTop: 30 }}>
                     <Link to="/reset-password" className="login-link-black">
                       Forgot your password?
                     </Link>
-                  </Row>
+                  </Row> */}
                   <Row style={{ marginTop: 10 }}>
                     <Link
                       to="/sign-in"

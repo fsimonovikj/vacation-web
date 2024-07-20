@@ -96,7 +96,7 @@ const SignInScreen = () => {
                   ]}
                 >
                   <Input
-                    placeholder="name@mozok.de"
+                    placeholder="name@example.com"
                     className="login-form-input"
                   />
                 </Form.Item>

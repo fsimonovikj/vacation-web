@@ -9,27 +9,27 @@ let webConfig: AdminWebConfig;
 switch (env) {
   case "local":
     webConfig = {
-      apiBaseUrl: "http://10.1.1.43:3000",
+      apiBaseUrl: "http://localhost:3000",
     };
     break;
   case "development":
     webConfig = {
-      apiBaseUrl: "http://local:3000",
+      apiBaseUrl: "http://localhost:3000",
     };
     break;
   case "staging":
     webConfig = {
-      apiBaseUrl: "http://10.1.1.43:3000",
+      apiBaseUrl: "http://localhost:3000",
     };
     break;
   case "production":
     webConfig = {
-      apiBaseUrl: "http://10.1.1.43:3000",
+      apiBaseUrl: "http://api.odmor.k.net.mk",
     };
     break;
   default:
     webConfig = {
-      apiBaseUrl: "http://10.1.1.43:3000",
+      apiBaseUrl: "http://localhost:3000",
     };
 }
 
