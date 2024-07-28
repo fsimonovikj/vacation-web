@@ -27,6 +27,11 @@ switch (env) {
       apiBaseUrl: "http://api.odmor.k.net.mk",
     };
     break;
+  case "knet":
+    webConfig = {
+	apiBaseUrl: "http://api.odmor.k.net.mk"
+    }
+    break;
   default:
     webConfig = {
       apiBaseUrl: "http://localhost:3000",

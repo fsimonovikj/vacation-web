@@ -57,6 +57,7 @@
     "dev": "react-scripts dev --watch",
     "local": "cross-env REACT_APP_ENVIRONMENT=local react-scripts start --watch",
     "production": "cross-env REACT_APP_ENVIRONMENT=production react-scripts start --watch",
+    "knet": "cross-env REACT_APP_ENVIRONMENT=knet react-scripts start --watch",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
