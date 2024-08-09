@@ -6,14 +6,16 @@ import {
   getLocalStorageWithExpiry,
   setLocalStorageWithExpiry,
 } from "../../core/utils/utils";
+import { SIGN_IN_EMAIL_LOCAL_STORAGE_KEY } from "../../auth/core/AuthModels";
 
 const SignInScreen = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
-  const email: string = getLocalStorageWithExpiry("signin-email") || "";
+  const email: string =
+    getLocalStorageWithExpiry(SIGN_IN_EMAIL_LOCAL_STORAGE_KEY) || "";
   const onFinish = async (request: { email: string }) => {
-    setLocalStorageWithExpiry("signin-email", request.email);
+    setLocalStorageWithExpiry(SIGN_IN_EMAIL_LOCAL_STORAGE_KEY, request.email);
     navigate("/enter-password");
   };
 

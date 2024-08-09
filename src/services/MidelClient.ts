@@ -4,6 +4,10 @@ import { UserViewModel } from "../interfaces/types";
 import toast from "react-hot-toast";
 import { setLocalStorageWithExpiry } from "../core/utils/utils";
 import webConfig from "../config/config";
+import {
+  TOKEN_LOCAL_STORAGE_KEY,
+  USER_LOCAL_STORAGE_KEY,
+} from "../auth/core/AuthModels";
 
 class MidelClient {
   async authenticate(
@@ -23,14 +27,18 @@ class MidelClient {
       })
       .then((response) => {
         if (response.status === 200) {
-          setLocalStorageWithExpiry("token", response.data.token);
+          setLocalStorageWithExpiry(
+            TOKEN_LOCAL_STORAGE_KEY,
+            response.data.token
+          );
           const user: UserViewModel = {
             firstName: response.data.user.firstName,
             lastName: response.data.user.lastName,
             role: response.data.user.role,
             email: email,
           };
-          localStorage.setItem("user", JSON.stringify(user));
+          setLocalStorageWithExpiry(USER_LOCAL_STORAGE_KEY, user);
+
           return user;
         }
       })

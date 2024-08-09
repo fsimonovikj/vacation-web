@@ -1,6 +1,7 @@
 import axios from "axios";
 import webConfig from "../config/config";
 import { getLocalStorageWithExpiry } from "../core/utils/utils";
+import { TOKEN_LOCAL_STORAGE_KEY } from "./core/AuthModels";
 
 const axiosApi = axios.create({
   baseURL: webConfig.apiBaseUrl,
@@ -13,7 +14,7 @@ const axiosApi = axios.create({
 // Request interceptor to add token to headers
 axiosApi.interceptors.request.use(
   (config) => {
-    const token = getLocalStorageWithExpiry("token");
+    const token = getLocalStorageWithExpiry(TOKEN_LOCAL_STORAGE_KEY);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

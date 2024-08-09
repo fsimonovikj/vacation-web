@@ -24,8 +24,15 @@ import {
   REQUEST_SENT_EXPLANATION,
   REQUEST_SENT_SUCCESSFULLY,
 } from "../../core/messages";
-import { getLocalizedMessage } from "../../core/utils/utils";
+import {
+  getLocalizedMessage,
+  getLocalStorageWithExpiry,
+} from "../../core/utils/utils";
 import axiosApi from "../../auth/AxiosApi";
+import {
+  DAYS_OFF_LOCAL_STORAGE_KEY,
+  TOKEN_LOCAL_STORAGE_KEY,
+} from "../../auth/core/AuthModels";
 
 interface VacationProps {
   user: UserViewModel;
@@ -36,8 +43,8 @@ interface VacationProps {
 const VacationBooking = ({ user, vacationDays, vacations }: VacationProps) => {
   const [events, setEvents] = useState<EventI[]>([]);
   const calendarRef = useRef(null);
-  const vacationNumber: any = localStorage.getItem("x-number") || 0;
-  const token = localStorage.getItem("token");
+  const vacationNumber = getLocalStorageWithExpiry(DAYS_OFF_LOCAL_STORAGE_KEY);
+  const token = getLocalStorageWithExpiry(TOKEN_LOCAL_STORAGE_KEY);
 
   const getBookedVacation = async () => {
     await axiosApi.get(`/booking-days/`).then((res) => {

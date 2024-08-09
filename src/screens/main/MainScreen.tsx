@@ -11,6 +11,10 @@ import jwt_decode from "jwt-decode";
 import { UserViewModel, VacationI } from "../../interfaces/types";
 import webConfig from "../../config/config";
 import axiosApi from "../../auth/AxiosApi";
+import {
+  TOKEN_LOCAL_STORAGE_KEY,
+  USER_LOCAL_STORAGE_KEY,
+} from "../../auth/core/AuthModels";
 
 interface MainScreenProps {
   vacationDays: number;
@@ -21,7 +25,7 @@ const MainScreen = ({ vacationDays, vacations }: MainScreenProps) => {
   const [tokenData, setTokenData] = useState<any>(null);
   const [user, setUser] = useState<UserViewModel>();
 
-  const token = getLocalStorageWithExpiry("token");
+  const token = getLocalStorageWithExpiry(TOKEN_LOCAL_STORAGE_KEY);
 
   useEffect(() => {
     const decodeToken = async () => {
@@ -48,7 +52,7 @@ const MainScreen = ({ vacationDays, vacations }: MainScreenProps) => {
               role: res.data.role,
             };
             setUser(user);
-            setLocalStorageWithExpiry("user", user);
+            setLocalStorageWithExpiry(USER_LOCAL_STORAGE_KEY, user);
           });
       }
     };

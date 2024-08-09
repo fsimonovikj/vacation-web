@@ -23,6 +23,7 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import axios from "axios";
 import webConfig from "../../config/config";
 import { v4 as uuidV4 } from "uuid";
+import { USER_LOCAL_STORAGE_KEY } from "../../auth/core/AuthModels";
 
 interface ManagementProps {
   vacationDays: number;
@@ -30,7 +31,7 @@ interface ManagementProps {
 }
 
 const Management = ({ vacationDays, vacations }: ManagementProps) => {
-  const user: UserViewModel = getLocalStorageWithExpiry("user");
+  const user: UserViewModel = getLocalStorageWithExpiry(USER_LOCAL_STORAGE_KEY);
   const [data, setData] = useState<VacationPlanI[]>([]);
   const [open, setOpen] = useState(false);
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});

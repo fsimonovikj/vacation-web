@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { v4 as uuidV4 } from "uuid";
 import webConfig from "../../config/config";
+import { USER_LOCAL_STORAGE_KEY } from "../../auth/core/AuthModels";
 
 interface UsersPageProps {
   vacationDays: number;
@@ -30,7 +31,7 @@ interface UsersPageProps {
 }
 
 const Users = ({ vacationDays, vacations }: UsersPageProps) => {
-  const user: UserViewModel = getLocalStorageWithExpiry("user");
+  const user: UserViewModel = getLocalStorageWithExpiry(USER_LOCAL_STORAGE_KEY);
 
   const [isOpen, setIsOpen] = useState(true);
   // eslint-disable-next-line

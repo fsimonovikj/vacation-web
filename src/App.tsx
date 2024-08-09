@@ -9,17 +9,25 @@ import ProtectRoutes from "./components/routes/ProtectRoutes";
 import MainScreen from "./screens/main/MainScreen";
 import Management from "./screens/management/Management";
 import { UserRole, UserViewModel, VacationI } from "./interfaces/types";
-import { getLocalStorageWithExpiry } from "./core/utils/utils";
+import {
+  getLocalStorageWithExpiry,
+  setLocalStorageWithExpiry,
+} from "./core/utils/utils";
 import Users from "./screens/users/Users";
 import { useEffect, useState } from "react";
 import webConfig from "./config/config";
 import axiosApi from "./auth/AxiosApi";
+import {
+  DAYS_OFF_LOCAL_STORAGE_KEY,
+  TOKEN_LOCAL_STORAGE_KEY,
+  USER_LOCAL_STORAGE_KEY,
+} from "./auth/core/AuthModels";
 
 function App() {
-  const user: UserViewModel = getLocalStorageWithExpiry("user");
+  const user: UserViewModel = getLocalStorageWithExpiry(USER_LOCAL_STORAGE_KEY);
   const [vacationDays, setVacationDays] = useState<number>(0);
   const [vacations, setVacations] = useState<VacationI[]>([]);
-  const token = localStorage.getItem("token");
+  const token = getLocalStorageWithExpiry(TOKEN_LOCAL_STORAGE_KEY);
 
   const getVacationDays = async () => {
     if (!user || !user.id) {
@@ -38,7 +46,7 @@ function App() {
 
       setVacationDays(days);
       setVacations(response.data);
-      localStorage.setItem("x-number", days);
+      setLocalStorageWithExpiry(DAYS_OFF_LOCAL_STORAGE_KEY, days);
     } catch (error) {
       console.error("Error fetching vacation days:", error);
     }

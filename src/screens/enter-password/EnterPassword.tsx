@@ -5,10 +5,11 @@ import { Link } from "react-router-dom";
 import { ArrowLeftOutlined } from "@mui/icons-material";
 import EnterPasswordPresenter from "./EnterPasswordPresenter";
 import { getLocalStorageWithExpiry } from "../../core/utils/utils";
+import { SIGN_IN_EMAIL_LOCAL_STORAGE_KEY } from "../../auth/core/AuthModels";
 
 const EnterPassword = () => {
   const { busy, error, setSignInRequest } = EnterPasswordPresenter();
-  const email = getLocalStorageWithExpiry("signin-email");
+  const email = getLocalStorageWithExpiry(SIGN_IN_EMAIL_LOCAL_STORAGE_KEY);
   const [form] = Form.useForm();
 
   // const passwordField = useRef<HTMLInputElement>(null)
