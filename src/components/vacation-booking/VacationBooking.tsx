@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { axiosApi } from "../../screens/main/MainScreen";
 import timeGridPlugin from "@fullcalendar/timegrid";
 
 import tippy from "tippy.js";
@@ -26,6 +25,7 @@ import {
   REQUEST_SENT_SUCCESSFULLY,
 } from "../../core/messages";
 import { getLocalizedMessage } from "../../core/utils/utils";
+import axiosApi from "../../auth/AxiosApi";
 
 interface VacationProps {
   user: UserViewModel;
@@ -37,52 +37,55 @@ const VacationBooking = ({ user, vacationDays, vacations }: VacationProps) => {
   const [events, setEvents] = useState<EventI[]>([]);
   const calendarRef = useRef(null);
   const vacationNumber: any = localStorage.getItem("x-number") || 0;
+  const token = localStorage.getItem("token");
+
+  const getBookedVacation = async () => {
+    await axiosApi.get(`/booking-days/`).then((res) => {
+      const vacationEvents = res.data.map((vacation: any) => {
+        let classNames = [];
+        if (vacation.status === "Approved") {
+          classNames.push("vacation-event-approved");
+        } else if (vacation.status === "Rejected") {
+          classNames.push("vacation-event-rejected");
+        } else if (vacation.status === "Pending") {
+          classNames.push("vacation-event-pending");
+        }
+
+        return {
+          title: vacation.title,
+          description: vacation.description,
+          start: vacation.start,
+          end: vacation.end,
+          allDay: true,
+          classNames: classNames,
+        };
+      });
+      setEvents((events: any) => [...events, ...vacationEvents]);
+    });
+  };
+
+  const getHolidays = async () => {
+    await axiosApi.get("/holidays").then((res) => {
+      const holidayEvents = res.data.map((holiday: EventI) => {
+        return {
+          title: holiday.title,
+          description: holiday.description,
+          start: holiday.start,
+          end: holiday.end,
+          allDay: true,
+          classNames: ["holiday-event"],
+        };
+      });
+      setEvents((events: any) => [...events, ...holidayEvents]);
+    });
+  };
 
   useEffect(() => {
-    const getHolidays = async () => {
-      await axiosApi.get("/holidays").then((res) => {
-        const holidayEvents = res.data.map((holiday: EventI) => {
-          return {
-            title: holiday.title,
-            description: holiday.description,
-            start: holiday.start,
-            end: holiday.end,
-            allDay: true,
-            classNames: ["holiday-event"],
-          };
-        });
-        setEvents((events: any) => [...events, ...holidayEvents]);
-      });
-    };
-
-    const getBookedVacation = async () => {
-      await axiosApi.get(`/booking-days/`).then((res) => {
-        const vacationEvents = res.data.map((vacation: any) => {
-          let classNames = [];
-          if (vacation.status === "Approved") {
-            classNames.push("vacation-event-approved");
-          } else if (vacation.status === "Rejected") {
-            classNames.push("vacation-event-rejected");
-          } else if (vacation.status === "Pending") {
-            classNames.push("vacation-event-pending");
-          }
-
-          return {
-            title: vacation.title,
-            description: vacation.description,
-            start: vacation.start,
-            end: vacation.end,
-            allDay: true,
-            classNames: classNames,
-          };
-        });
-        setEvents((events: any) => [...events, ...vacationEvents]);
-      });
-    };
-
-    getBookedVacation();
-    getHolidays();
-  }, []);
+    if (token) {
+      getHolidays();
+      getBookedVacation();
+    }
+  }, [token]);
 
   const handleSelect = (selectInfo: any) => {
     if (!vacations || !vacationDays) {

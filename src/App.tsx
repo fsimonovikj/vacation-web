@@ -6,18 +6,20 @@ import SignInScreen from "./screens/sign-in/SignInScreen";
 import EnterPassword from "./screens/enter-password/EnterPassword";
 import { ToastNotification } from "./components/modals/ToastNotification";
 import ProtectRoutes from "./components/routes/ProtectRoutes";
-import MainScreen, { axiosApi } from "./screens/main/MainScreen";
+import MainScreen from "./screens/main/MainScreen";
 import Management from "./screens/management/Management";
 import { UserRole, UserViewModel, VacationI } from "./interfaces/types";
 import { getLocalStorageWithExpiry } from "./core/utils/utils";
 import Users from "./screens/users/Users";
 import { useEffect, useState } from "react";
 import webConfig from "./config/config";
+import axiosApi from "./auth/AxiosApi";
 
 function App() {
   const user: UserViewModel = getLocalStorageWithExpiry("user");
   const [vacationDays, setVacationDays] = useState<number>(0);
   const [vacations, setVacations] = useState<VacationI[]>([]);
+  const token = localStorage.getItem("token");
 
   const getVacationDays = async () => {
     if (!user || !user.id) {
@@ -43,9 +45,11 @@ function App() {
   };
 
   useEffect(() => {
-    getVacationDays();
-    // eslint-disable-next-line
-  }, []);
+    if (token) {
+      getVacationDays();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
 
   return (
     <>

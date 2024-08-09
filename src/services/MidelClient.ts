@@ -54,8 +54,8 @@ class MidelClient {
 
   // TODO: modified function for the logout user and remove all data from the storage
   logout(): void {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    localStorage.clear();
+    window.location.href = "/";
   }
 }
 export default MidelClient;

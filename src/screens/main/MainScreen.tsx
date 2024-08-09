@@ -8,17 +8,9 @@ import {
 import { useEffect, useState } from "react";
 import VacationBooking from "../../components/vacation-booking/VacationBooking";
 import jwt_decode from "jwt-decode";
-import axios from "axios";
 import { UserViewModel, VacationI } from "../../interfaces/types";
 import webConfig from "../../config/config";
-
-export const axiosApi = axios.create({
-  baseURL: webConfig.apiBaseUrl,
-  headers: {
-    "Content-Type": "application/json",
-    accept: "application/json",
-  },
-});
+import axiosApi from "../../auth/AxiosApi";
 
 interface MainScreenProps {
   vacationDays: number;
