@@ -1,9 +1,12 @@
+import { VacationStatusEnum } from "../components/vacation-booking/VacationStatusEnum";
+
 export interface UserViewModel {
   id?: string;
   firstName?: string;
   lastName?: string;
   email?: string;
   userId?: string;
+  password?: string;
   companyId?: string;
   modules?: any[];
   statistics?: any[];
@@ -11,7 +14,7 @@ export interface UserViewModel {
   company?: any;
   department?: string;
   status?: string;
-  role?: string;
+  role?: any;
 }
 
 export interface InstalledProducts {
@@ -78,6 +81,7 @@ export interface EventI {
   end: Date;
   allDay: boolean;
   classNames: string;
+  status?: any;
 }
 
 export interface VacationI {
@@ -95,6 +99,29 @@ export interface VacationPlanI {
   id: string;
   createdAt: Date;
   deletedAt: Date | null;
+  title: string;
+  start: Date;
+  end: Date;
+  days: number;
+}
+
+export interface BookingRequestI {
+  id: string;
+  title: string;
+  description: string;
+  start: Date;
+  end: Date;
+  allDay: boolean;
+  bookedDays: number;
+  user: string;
+  firstName: string;
+  lastName: string;
+  status: VacationStatusEnum;
+  vacationId: string;
+}
+
+export interface VacationPlanRequestI {
+  id: string;
   title: string;
   start: Date;
   end: Date;

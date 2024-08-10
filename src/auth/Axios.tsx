@@ -4,7 +4,7 @@ import { getLocalStorageWithExpiry } from "../core/utils/utils";
 import {
   TOKEN_LOCAL_STORAGE_KEY,
   USER_LOCAL_STORAGE_KEY,
-} from "./core/AuthModels";
+} from "./core/AuthServices";
 
 const axiosApi = axios.create({
   baseURL: webConfig.apiBaseUrl,

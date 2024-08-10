@@ -43,3 +43,7 @@ export const getLocalizedMessage = (messages: any) => {
   const localisation = process.env.REACT_APP_LOCALISATION || "en"; // This should be dynamic and based on user's locale
   return messages[localisation] || messages["en"]; // Default to 'en' if locale not found
 };
+
+export const capitalizeFirstLetter = (string: string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};

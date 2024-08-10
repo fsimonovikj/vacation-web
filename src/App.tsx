@@ -8,56 +8,12 @@ import { ToastNotification } from "./components/modals/ToastNotification";
 import ProtectRoutes from "./components/routes/ProtectRoutes";
 import MainScreen from "./screens/main/MainScreen";
 import Management from "./screens/management/Management";
-import { UserRole, UserViewModel, VacationI } from "./interfaces/types";
-import {
-  getLocalStorageWithExpiry,
-  setLocalStorageWithExpiry,
-} from "./core/utils/utils";
+import { UserRole } from "./interfaces/types";
 import Users from "./screens/users/Users";
-import { useEffect, useState } from "react";
-import webConfig from "./config/config";
-import axiosApi from "./auth/AxiosApi";
-import {
-  DAYS_OFF_LOCAL_STORAGE_KEY,
-  TOKEN_LOCAL_STORAGE_KEY,
-  USER_LOCAL_STORAGE_KEY,
-} from "./auth/core/AuthModels";
+import { useAuth } from "./auth/core/Auth";
 
 function App() {
-  const user: UserViewModel = getLocalStorageWithExpiry(USER_LOCAL_STORAGE_KEY);
-  const [vacationDays, setVacationDays] = useState<number>(0);
-  const [vacations, setVacations] = useState<VacationI[]>([]);
-  const token = getLocalStorageWithExpiry(TOKEN_LOCAL_STORAGE_KEY);
-
-  const getVacationDays = async () => {
-    if (!user || !user.id) {
-      return;
-    }
-
-    try {
-      const response = await axiosApi.get(
-        `${webConfig.apiBaseUrl}/vacation/${user.id}`
-      );
-
-      const days = response.data.reduce(
-        (totalDays: any, element: any) => totalDays + parseInt(element.days),
-        0
-      );
-
-      setVacationDays(days);
-      setVacations(response.data);
-      setLocalStorageWithExpiry(DAYS_OFF_LOCAL_STORAGE_KEY, days);
-    } catch (error) {
-      console.error("Error fetching vacation days:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (token) {
-      getVacationDays();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  const { user } = useAuth();
 
   return (
     <>
@@ -71,41 +27,12 @@ function App() {
           <Route path="/" element={<ProtectRoutes />}>
             {user && user.role === UserRole.Admin ? (
               <>
-                <Route
-                  path="/main"
-                  element={
-                    <MainScreen
-                      vacationDays={vacationDays}
-                      vacations={vacations}
-                    />
-                  }
-                />
-                <Route
-                  path="/management"
-                  element={
-                    <Management
-                      vacationDays={vacationDays}
-                      vacations={vacations}
-                    />
-                  }
-                />
-                <Route
-                  path="/users"
-                  element={
-                    <Users vacationDays={vacationDays} vacations={vacations} />
-                  }
-                />
+                <Route path="/main" element={<MainScreen />} />
+                <Route path="/management" element={<Management />} />
+                <Route path="/users" element={<Users />} />
               </>
             ) : (
-              <Route
-                path="/main"
-                element={
-                  <MainScreen
-                    vacationDays={vacationDays}
-                    vacations={vacations}
-                  />
-                }
-              />
+              <Route path="/main" element={<MainScreen />} />
             )}
           </Route>
         </Routes>

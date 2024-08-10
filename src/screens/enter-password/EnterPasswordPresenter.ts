@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MidelClient from "../../services/MidelClient";
+import { useAuth } from "../../auth/core/Auth";
+import { AuthModel } from "../../auth/core/AuthModels";
 
 interface ViewModel {
   busy: boolean;
@@ -19,6 +21,8 @@ const EnterPasswordPresenter = (): ViewModel => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
+  const { saveAuth, saveUser } = useAuth();
+
   useEffect(() => {
     let isSubscribed = true;
     (async () => {
@@ -27,12 +31,14 @@ const EnterPasswordPresenter = (): ViewModel => {
       setBusy(true);
       const client = new MidelClient();
       try {
-        const signInSuccess = await client.authenticate(
+        const response: AuthModel = await client.authenticate(
           signInRequest.email,
           signInRequest.password
         );
 
-        if (signInSuccess) {
+        if (response) {
+          saveAuth(response);
+          saveUser(response.user);
           navigate("/main");
         } else {
           setError("Invalid credentials");
@@ -45,7 +51,7 @@ const EnterPasswordPresenter = (): ViewModel => {
     return () => {
       isSubscribed = false;
     };
-  }, [signInRequest, navigate]);
+  }, [signInRequest, navigate, saveAuth, saveUser]);
 
   return {
     busy,

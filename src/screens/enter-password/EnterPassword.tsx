@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeftOutlined } from "@mui/icons-material";
 import EnterPasswordPresenter from "./EnterPasswordPresenter";
 import { getLocalStorageWithExpiry } from "../../core/utils/utils";
-import { SIGN_IN_EMAIL_LOCAL_STORAGE_KEY } from "../../auth/core/AuthModels";
+import { SIGN_IN_EMAIL_LOCAL_STORAGE_KEY } from "../../auth/core/AuthServices";
 
 const EnterPassword = () => {
   const { busy, error, setSignInRequest } = EnterPasswordPresenter();

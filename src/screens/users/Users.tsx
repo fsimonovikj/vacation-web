@@ -17,58 +17,29 @@ import {
 } from "@mui/material";
 import "leaflet/dist/leaflet.css";
 import { Header } from "../../components/header/Header";
-import { UserViewModel, VacationI } from "../../interfaces/types";
-import { getLocalStorageWithExpiry } from "../../core/utils/utils";
+import { UserViewModel } from "../../interfaces/types";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { v4 as uuidV4 } from "uuid";
-import webConfig from "../../config/config";
-import { USER_LOCAL_STORAGE_KEY } from "../../auth/core/AuthModels";
+import MidelClient from "../../services/MidelClient";
+import { useAuth } from "../../auth/core/Auth";
 
-interface UsersPageProps {
-  vacationDays: number;
-  vacations: VacationI[];
-}
-
-const Users = ({ vacationDays, vacations }: UsersPageProps) => {
-  const user: UserViewModel = getLocalStorageWithExpiry(USER_LOCAL_STORAGE_KEY);
-
-  const [isOpen, setIsOpen] = useState(true);
-  // eslint-disable-next-line
-  const [data, setData] = useState<any>([]);
+const Users = () => {
+  const [open, setOpen] = useState(false);
   const [users, setUsers] = useState<UserViewModel[]>([]);
-
-  // eslint-disable-next-line
-  const handleToggle = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const fetchData = async () => {
-    try {
-      const res = await axios.get(`${webConfig.apiBaseUrl}/vacation/lists`);
-      setData(res.data);
-    } catch (error) {
-      // Handle error if API call fails.
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  const fetchUsers = async () => {
-    try {
-      const res = await axios.get(`${webConfig.apiBaseUrl}/users`);
-      setUsers(res.data);
-    } catch (error) {
-      // Handle error if API call fails.
-      console.error("Error fetching data:", error);
-    }
-  };
+  const client = new MidelClient();
+  const { user } = useAuth();
 
   useEffect(() => {
-    fetchData();
-    fetchUsers();
+    (async () => {
+      try {
+        const response = await client.receiveUsers(user!.companyId as string);
+        setUsers(response);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    })();
+    // eslint-disable-next-line
   }, []);
-
-  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -81,9 +52,7 @@ const Users = ({ vacationDays, vacations }: UsersPageProps) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      console.log(`Creating user`);
-
-      await axios.post(`${webConfig.apiBaseUrl}/users`, {
+      const newUser: UserViewModel = {
         id: uuidV4(),
         firstName: (event.target as any).firstName.value,
         lastName: (event.target as any).lastName.value,
@@ -91,12 +60,13 @@ const Users = ({ vacationDays, vacations }: UsersPageProps) => {
         password: (event.target as any).password.value,
         department: "dev",
         role: (event.target as any).role.value,
-      });
+        companyId: user!.companyId,
+        status: "active",
+      };
 
-      console.log(`Created user successfully`);
+      await client.requestUser(newUser);
+      setUsers((prevUsers) => [...prevUsers, newUser]);
       handleClose();
-      fetchUsers();
-      fetchData();
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -115,7 +85,7 @@ const Users = ({ vacationDays, vacations }: UsersPageProps) => {
           color: "white",
         }}
       >
-        <Header user={user} vacationDays={vacationDays} vacations={vacations} />
+        <Header />
       </Box>
       <Box
         position="absolute"

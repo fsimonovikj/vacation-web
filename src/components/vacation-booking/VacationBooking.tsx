@@ -3,7 +3,6 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
-
 import tippy from "tippy.js";
 import "tippy.js/dist/tippy.css";
 import { v4 as uuidV4 } from "uuid";
@@ -11,9 +10,9 @@ import { VacationStatusEnum } from "./VacationStatusEnum";
 import toast from "react-hot-toast";
 import { Box } from "@mui/material";
 import {
+  BookingRequestI,
   EventI,
   UserRole,
-  UserViewModel,
   VacationI,
 } from "../../interfaces/types";
 import {
@@ -24,75 +23,59 @@ import {
   REQUEST_SENT_EXPLANATION,
   REQUEST_SENT_SUCCESSFULLY,
 } from "../../core/messages";
-import {
-  getLocalizedMessage,
-  getLocalStorageWithExpiry,
-} from "../../core/utils/utils";
-import axiosApi from "../../auth/AxiosApi";
-import {
-  DAYS_OFF_LOCAL_STORAGE_KEY,
-  TOKEN_LOCAL_STORAGE_KEY,
-} from "../../auth/core/AuthModels";
+import { getLocalizedMessage } from "../../core/utils/utils";
+import { useAuth } from "../../auth/core/Auth";
+import MidelClient from "../../services/MidelClient";
 
-interface VacationProps {
-  user: UserViewModel;
-  vacationDays: number;
-  vacations: VacationI[];
-}
-
-const VacationBooking = ({ user, vacationDays, vacations }: VacationProps) => {
+const VacationBooking = () => {
+  const [vacations, setVacations] = useState<VacationI[]>([]);
+  const [vacationDays, setVacationDays] = useState<number>(0);
   const [events, setEvents] = useState<EventI[]>([]);
   const calendarRef = useRef(null);
-  const vacationNumber = getLocalStorageWithExpiry(DAYS_OFF_LOCAL_STORAGE_KEY);
-  const token = getLocalStorageWithExpiry(TOKEN_LOCAL_STORAGE_KEY);
-
-  const getBookedVacation = async () => {
-    await axiosApi.get(`/booking-days/`).then((res) => {
-      const vacationEvents = res.data.map((vacation: any) => {
-        let classNames = [];
-        if (vacation.status === "Approved") {
-          classNames.push("vacation-event-approved");
-        } else if (vacation.status === "Rejected") {
-          classNames.push("vacation-event-rejected");
-        } else if (vacation.status === "Pending") {
-          classNames.push("vacation-event-pending");
-        }
-
-        return {
-          title: vacation.title,
-          description: vacation.description,
-          start: vacation.start,
-          end: vacation.end,
-          allDay: true,
-          classNames: classNames,
-        };
-      });
-      setEvents((events: any) => [...events, ...vacationEvents]);
-    });
-  };
-
-  const getHolidays = async () => {
-    await axiosApi.get("/holidays").then((res) => {
-      const holidayEvents = res.data.map((holiday: EventI) => {
-        return {
-          title: holiday.title,
-          description: holiday.description,
-          start: holiday.start,
-          end: holiday.end,
-          allDay: true,
-          classNames: ["holiday-event"],
-        };
-      });
-      setEvents((events: any) => [...events, ...holidayEvents]);
-    });
-  };
+  const client = new MidelClient();
+  const { user } = useAuth();
 
   useEffect(() => {
-    if (token) {
-      getHolidays();
-      getBookedVacation();
+    (async () => {
+      try {
+        const days = await client.receiveVacationDays(user!.id as string);
+        const vacations = await client.receiveVacations(user!.id as string);
+        const booked = await client.receiveBookedVacations();
+        const holidays = await client.receiveHolidays();
+
+        setVacationDays(days);
+        setVacations(vacations);
+
+        const allEvents = [
+          ...booked.map((event: EventI) => ({
+            ...event,
+            classNames: getClassNamesForStatus(event.status),
+          })),
+          ...holidays.map((event: EventI) => ({
+            ...event,
+            classNames: ["holiday-event"],
+          })),
+        ];
+        setEvents(allEvents);
+      } catch (error) {
+        console.error("Error fetching vacation days:", error);
+      }
+    })();
+    // eslint-disable-next-line
+  }, []);
+
+  const getClassNamesForStatus = (status: VacationStatusEnum) => {
+    switch (status) {
+      case VacationStatusEnum.Approved:
+        return ["vacation-event-approved"];
+      case VacationStatusEnum.Rejected:
+        return ["vacation-event-rejected"];
+      case VacationStatusEnum.Pending:
+        return ["vacation-event-pending"];
+      default:
+        return [];
     }
-  }, [token]);
+  };
 
   const handleSelect = (selectInfo: any) => {
     if (!vacations || !vacationDays) {
@@ -127,16 +110,10 @@ const VacationBooking = ({ user, vacationDays, vacations }: VacationProps) => {
       return;
     }
 
-    if (count > vacationNumber) {
-      toast.error(getLocalizedMessage(REQUEST_MUCH_VACATION_DAYS));
-
-      return;
-    }
-
     if (count > 0) {
       const title = prompt(getLocalizedMessage(REQUEST_SENT_EXPLANATION));
 
-      if (title) {
+      if (title && user) {
         const newEvent = {
           id: uuidV4(),
           title: user.firstName + " " + user.lastName,
@@ -156,17 +133,12 @@ const VacationBooking = ({ user, vacationDays, vacations }: VacationProps) => {
 
         // setEvents([...events, newEvent]);
 
-        // eslint-disable-next-line
-        axiosApi.post("/booking-days", newEvent).then((res) => {
-          console.log(res.data);
-        });
+        (async () => {
+          await client.requestBookingDays(newEvent as BookingRequestI);
+          await client.requestBookingRequest(newEvent as BookingRequestI);
 
-        // eslint-disable-next-line
-        axiosApi.post("/booking-requests", newEvent).then((res) => {
-          console.log(res.data);
-        });
-
-        toast.success(getLocalizedMessage(REQUEST_SENT_SUCCESSFULLY));
+          toast.success(getLocalizedMessage(REQUEST_SENT_SUCCESSFULLY));
+        })();
       }
     }
   };
@@ -190,8 +162,8 @@ const VacationBooking = ({ user, vacationDays, vacations }: VacationProps) => {
       <Box
         className="calendar-container"
         sx={{
-          justifyContent: "center", // Center horizontally
-          alignItems: "center", // Center vertically
+          justifyContent: "center",
+          alignItems: "center",
           margin: "auto",
           marginTop: "3%",
           width: "70%",

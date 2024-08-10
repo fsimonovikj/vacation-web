@@ -2,32 +2,32 @@ import { Box } from "@mui/material";
 import { Button } from "antd";
 import MidelClient from "../../services/MidelClient";
 import { AppPathEnum } from "../../enums/path-enum";
-import { UserRole, UserViewModel, VacationI } from "../../interfaces/types";
-import { useNavigate } from "react-router-dom";
+import { UserRole, VacationI } from "../../interfaces/types";
+import { useEffect, useState } from "react";
+import { useAuth } from "../../auth/core/Auth";
+import { capitalizeFirstLetter } from "../../core/utils/utils";
 
-interface HeaderProps {
-  user: UserViewModel | undefined;
-  vacationDays: number;
-  vacations: VacationI[];
-}
-
-export const Header = ({ user, vacationDays, vacations }: HeaderProps) => {
+export const Header = () => {
+  const [vacationDays, setVacationDays] = useState<number>(0);
+  const [vacations, setVacations] = useState<VacationI[]>([]);
   const activeMenu = window.location.pathname;
   const client = new MidelClient();
-  const navigate = useNavigate();
+  const { user } = useAuth();
 
-  async function logout() {
-    try {
-      await client.logout();
-      navigate("/");
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  useEffect(() => {
+    (async () => {
+      try {
+        const days = await client.receiveVacationDays(user!.id as string);
+        const vacations = await client.receiveVacations(user!.id as string);
 
-  const capitalizeFirstLetter = (string: string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
+        setVacations(vacations);
+        setVacationDays(days);
+      } catch (error) {
+        console.error("Error fetching vacation days:", error);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   return (
     <>
@@ -163,7 +163,7 @@ export const Header = ({ user, vacationDays, vacations }: HeaderProps) => {
             htmlType="submit"
             className="login-form-button"
             style={{ borderRadius: "20px", padding: "0 30px" }}
-            onClick={logout}
+            onClick={client.logout}
           >
             Logout
           </Button>

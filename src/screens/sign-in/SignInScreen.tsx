@@ -6,7 +6,7 @@ import {
   getLocalStorageWithExpiry,
   setLocalStorageWithExpiry,
 } from "../../core/utils/utils";
-import { SIGN_IN_EMAIL_LOCAL_STORAGE_KEY } from "../../auth/core/AuthModels";
+import { SIGN_IN_EMAIL_LOCAL_STORAGE_KEY } from "../../auth/core/AuthServices";
 
 const SignInScreen = () => {
   const [form] = Form.useForm();

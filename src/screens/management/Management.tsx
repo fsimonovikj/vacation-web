@@ -10,46 +10,55 @@ import {
 } from "@mui/material";
 import "leaflet/dist/leaflet.css";
 import { Header } from "../../components/header/Header";
-import {
-  UserViewModel,
-  VacationI,
-  VacationPlanI,
-} from "../../interfaces/types";
-import { getLocalStorageWithExpiry } from "../../core/utils/utils";
+import { VacationPlanI } from "../../interfaces/types";
 import { Typography } from "antd";
 import { useEffect, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import axios from "axios";
-import webConfig from "../../config/config";
 import { v4 as uuidV4 } from "uuid";
-import { USER_LOCAL_STORAGE_KEY } from "../../auth/core/AuthModels";
+import MidelClient from "../../services/MidelClient";
 
-interface ManagementProps {
-  vacationDays: number;
-  vacations: VacationI[];
-}
-
-const Management = ({ vacationDays, vacations }: ManagementProps) => {
-  const user: UserViewModel = getLocalStorageWithExpiry(USER_LOCAL_STORAGE_KEY);
-  const [data, setData] = useState<VacationPlanI[]>([]);
-  const [open, setOpen] = useState(false);
+const Management = () => {
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
-
-  const fetchData = async () => {
-    try {
-      const res = await axios.get(
-        `${webConfig.apiBaseUrl}/vacation-plan/lists`
-      );
-      setData(res.data);
-    } catch (error) {
-      console.log(`Error fetching data`, error);
-    }
-  };
+  const [vacationPlan, setVacationPlan] = useState<VacationPlanI[]>([]);
+  const [open, setOpen] = useState(false);
+  const client = new MidelClient();
 
   useEffect(() => {
-    fetchData();
+    (async () => {
+      try {
+        const vacationPlan = await client.receiveVacationPlan();
+
+        setVacationPlan(vacationPlan);
+      } catch (error) {
+        console.error("Error fetching vacation days:", error);
+      }
+    })();
+    // eslint-disable-next-line
   }, []);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      const newVacationPlan: VacationPlanI = {
+        id: uuidV4(),
+        title: (event.target as any).title.value,
+        start: (event.target as any).start.value,
+        end: (event.target as any).end.value,
+        days: (event.target as any).days.value,
+        createdAt: new Date(),
+        deletedAt: null,
+      };
+
+      await client.requestVacationPlan(newVacationPlan);
+
+      setVacationPlan((prevPlans) => [...prevPlans, newVacationPlan]);
+
+      handleClose();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const handleToggle = (id: string) => {
     setOpenItems((prevState) => ({
@@ -66,23 +75,6 @@ const Management = ({ vacationDays, vacations }: ManagementProps) => {
     setOpen(false);
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    try {
-      await axios.post(`${webConfig.apiBaseUrl}/vacation-plan`, {
-        id: uuidV4(),
-        title: (event.target as any).title.value,
-        start: (event.target as any).start.value,
-        end: (event.target as any).end.value,
-        days: (event.target as any).days.value,
-      });
-
-      console.log(`Created vacation successfully`);
-      handleClose();
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
   return (
     <>
       <Box
@@ -96,7 +88,7 @@ const Management = ({ vacationDays, vacations }: ManagementProps) => {
           color: "white",
         }}
       >
-        <Header user={user} vacationDays={vacationDays} vacations={vacations} />
+        <Header />
       </Box>
       <Box
         position="absolute"
@@ -183,7 +175,8 @@ const Management = ({ vacationDays, vacations }: ManagementProps) => {
             padding: "0 2%",
           }}
         >
-          {data.map((vacation) => (
+          {/* TODO: create a new file for vacation plan */}
+          {vacationPlan.map((vacation) => (
             <Box
               key={vacation.id}
               style={{
