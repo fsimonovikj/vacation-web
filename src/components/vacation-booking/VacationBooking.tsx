@@ -25,14 +25,14 @@ import {
 } from "../../core/messages";
 import { getLocalizedMessage } from "../../core/utils/utils";
 import { useAuth } from "../../auth/core/Auth";
-import MidelClient from "../../services/MidelClient";
+import CodefixClient from "../../services/CodefixClient";
 
 const VacationBooking = () => {
   const [vacations, setVacations] = useState<VacationI[]>([]);
   const [vacationDays, setVacationDays] = useState<number>(0);
   const [events, setEvents] = useState<EventI[]>([]);
   const calendarRef = useRef(null);
-  const client = new MidelClient();
+  const client = new CodefixClient();
   const { user } = useAuth();
 
   useEffect(() => {

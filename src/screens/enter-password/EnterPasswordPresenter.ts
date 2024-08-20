@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import MidelClient from "../../services/MidelClient";
 import { useAuth } from "../../auth/core/Auth";
 import { AuthModel } from "../../auth/core/AuthModels";
+import CodefixClient from "../../services/CodefixClient";
 
 interface ViewModel {
   busy: boolean;
@@ -29,7 +29,7 @@ const EnterPasswordPresenter = (): ViewModel => {
       if (!isSubscribed) return;
       if (!signInRequest) return;
       setBusy(true);
-      const client = new MidelClient();
+      const client = new CodefixClient();
       try {
         const response: AuthModel = await client.authenticate(
           signInRequest.email,

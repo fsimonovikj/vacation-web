@@ -20,13 +20,13 @@ import { Header } from "../../components/header/Header";
 import { UserViewModel } from "../../interfaces/types";
 import { useEffect, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
-import MidelClient from "../../services/MidelClient";
 import { useAuth } from "../../auth/core/Auth";
+import CodefixClient from "../../services/CodefixClient";
 
 const Users = () => {
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState<UserViewModel[]>([]);
-  const client = new MidelClient();
+  const client = new CodefixClient();
   const { user } = useAuth();
 
   useEffect(() => {

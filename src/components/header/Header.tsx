@@ -1,17 +1,18 @@
 import { Box } from "@mui/material";
 import { Button } from "antd";
-import MidelClient from "../../services/MidelClient";
+
 import { AppPathEnum } from "../../enums/path-enum";
 import { UserRole, VacationI } from "../../interfaces/types";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../auth/core/Auth";
 import { capitalizeFirstLetter } from "../../core/utils/utils";
+import CodefixClient from "../../services/CodefixClient";
 
 export const Header = () => {
   const [vacationDays, setVacationDays] = useState<number>(0);
   const [vacations, setVacations] = useState<VacationI[]>([]);
   const activeMenu = window.location.pathname;
-  const client = new MidelClient();
+  const client = new CodefixClient();
   const { user } = useAuth();
 
   useEffect(() => {

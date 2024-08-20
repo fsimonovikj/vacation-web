@@ -16,13 +16,13 @@ import { useEffect, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { v4 as uuidV4 } from "uuid";
-import MidelClient from "../../services/MidelClient";
+import CodefixClient from "../../services/CodefixClient";
 
 const Management = () => {
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
   const [vacationPlan, setVacationPlan] = useState<VacationPlanI[]>([]);
   const [open, setOpen] = useState(false);
-  const client = new MidelClient();
+  const client = new CodefixClient();
 
   useEffect(() => {
     (async () => {

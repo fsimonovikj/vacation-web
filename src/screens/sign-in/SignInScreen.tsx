@@ -39,17 +39,12 @@ const SignInScreen = () => {
       <Row style={{ height: "100%" }}>
         <Col style={{ height: "100%", width: "100%" }}>
           <Row style={{ width: "100%" }}>
-            {/* <img
-              src={mozok_logo}
-              style={{ width: "75px", marginRight: "1rem" }}
-              alt="Pixaera"
-            /> */}
             <Col
               style={{
                 lineHeight: "0.2rem",
                 margin: "auto",
                 marginLeft: "0",
-                color: "aliceblue",
+                color: "#3a3c3d",
               }}
             >
               <h1>{process.env.REACT_APP_COMPANY_NAME}</h1>
@@ -60,7 +55,7 @@ const SignInScreen = () => {
             <Col style={{ width: "70%", position: "absolute", bottom: 0 }}>
               <h2
                 style={{
-                  color: "aliceblue",
+                  color: "#3a3c3d",
                   lineHeight: "35px",
                   margin: 0,
                 }}

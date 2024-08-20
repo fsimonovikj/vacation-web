@@ -10,7 +10,7 @@ import webConfig from "../config/config";
 import { AuthModel } from "../auth/core/AuthModels";
 import axiosApi from "../auth/AxiosApi";
 
-class MidelClient {
+class CodefixClient {
   async authenticate(email: string, password: string): Promise<AuthModel> {
     const userSessionRequest = {
       email,
@@ -186,4 +186,4 @@ class MidelClient {
   }
 }
 
-export default MidelClient;
+export default CodefixClient;
