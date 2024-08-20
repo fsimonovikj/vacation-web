@@ -1,3 +1,5 @@
+import * as dotenv from "dotenv";
+dotenv.config();
 interface AdminWebConfig {
   apiBaseUrl: string;
 }
@@ -12,25 +14,10 @@ switch (env) {
       apiBaseUrl: "http://localhost:3000",
     };
     break;
-  case "development":
-    webConfig = {
-      apiBaseUrl: "http://localhost:3000",
-    };
-    break;
-  case "staging":
-    webConfig = {
-      apiBaseUrl: "http://localhost:3000",
-    };
-    break;
   case "production":
     webConfig = {
-      apiBaseUrl: "http://api.odmor.k.net.mk",
+      apiBaseUrl: process.env.REACT_APP_BACKEND_URL ?? "",
     };
-    break;
-  case "knet":
-    webConfig = {
-	apiBaseUrl: "http://api.odmor.k.net.mk"
-    }
     break;
   default:
     webConfig = {
