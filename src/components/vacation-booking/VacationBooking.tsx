@@ -26,6 +26,7 @@ import {
 import { getLocalizedMessage } from "../../core/utils/utils";
 import { useAuth } from "../../auth/core/Auth";
 import CodefixClient from "../../services/CodefixClient";
+import "../../styles/calendar.scss";
 
 const VacationBooking = () => {
   const [vacations, setVacations] = useState<VacationI[]>([]);
@@ -119,7 +120,7 @@ const VacationBooking = () => {
           title: user.firstName + " " + user.lastName,
           description: title,
           start: selectInfo.startStr,
-          end: selectInfo.endStr,
+          end: selectInfo.endStr || selectInfo.startStr,
           userId: user.id,
           allDay: true,
           bookedDays: count,
@@ -166,7 +167,6 @@ const VacationBooking = () => {
           alignItems: "center",
           margin: "auto",
           marginTop: "3%",
-          width: "70%",
         }}
       >
         <FullCalendar
@@ -184,12 +184,12 @@ const VacationBooking = () => {
           select={handleSelect}
           events={events}
           ref={calendarRef}
-          // INFO: 0 - Sunday, 1 - Monday, 2 - Tuesday, 3 - Wednesday, 4 - Thursday, 5 - Friday, 6 - Saturday
           firstDay={1}
           eventDisplay="block"
           eventDidMount={handleEventMount}
           dragScroll={true}
           navLinks={true}
+          height="auto"
         />
       </Box>
     </>
