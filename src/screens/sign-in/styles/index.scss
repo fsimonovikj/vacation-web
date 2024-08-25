@@ -1,0 +1,55 @@
+.sign-in-layout {
+    height: 96vh;
+    background-color: transparent;
+    padding: 50px;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+}
+
+.full-height {
+    height: 100%;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.center-content {
+    line-height: 0.2rem;
+    margin: auto;
+    margin-left: 0;
+    color: #3a3c3d;
+}
+
+.sign-in-col {
+    width: 70%;
+    position: absolute;
+    bottom: 0;
+}
+
+.sign-in-title {
+    color: #3a3c3d;
+    line-height: 35px;
+    margin: 0;
+}
+
+.sign-in-light {
+    color: #a7afbe;
+    padding: 0;
+    line-height: 20px;
+    margin: 0;
+}
+
+.input-container {
+    width: 250px;
+}
+
+.mb-0 {
+    margin-bottom: 0;
+}
+
+.next-button {
+    border-radius: 20px;
+    padding: 0 30px;
+}

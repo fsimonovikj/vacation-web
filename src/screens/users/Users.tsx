@@ -1,19 +1,6 @@
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Paper,
-  Select,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
 } from "@mui/material";
 import "leaflet/dist/leaflet.css";
 import { Header } from "../../components/header/Header";
@@ -22,6 +9,9 @@ import { useEffect, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
 import { useAuth } from "../../auth/core/Auth";
 import CodefixClient from "../../services/CodefixClient";
+import "./styles/index.scss";
+import UsersTable from "../../components/users/UsersTable";
+import CreateUserModal from "../../components/users/CreateUserModal";
 
 const Users = () => {
   const [open, setOpen] = useState(false);
@@ -74,143 +64,21 @@ const Users = () => {
 
   return (
     <>
-      <Box
-        position="fixed"
-        left={0}
-        top={0}
-        style={{
-          width: "20%",
-          height: "100%",
-          backgroundColor: "#1c1c1c",
-          color: "white",
-        }}
-      >
+      <Box className="users-header">
         <Header />
       </Box>
-      <Box
-        position="absolute"
-        left={"20%"}
-        top={0}
-        style={{ width: "80%", height: "100%", backgroundColor: "#f5f5f5" }}
-      >
-        <Button
-          onClick={handleClickOpen}
-          style={{
-            margin: "1% 2.5%",
-            backgroundColor: "#1c1c1c",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            fontSize: "12px",
-            padding: "5px 10px",
-          }}
-        >
+      <Box className="users-content">
+        <Button onClick={handleClickOpen} id="create-user-btn">
           Create User +
         </Button>
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Create a new user</DialogTitle>
-          <DialogContent>
-            {/* vacation-solution */}
-            <form onSubmit={handleSubmit}>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="firstName"
-                name="firstName"
-                label="First Name"
-                type="text"
-                required
-                fullWidth
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                id="lastName"
-                name="lastName"
-                label="Last Name"
-                type="text"
-                required
-                fullWidth
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                id="email"
-                name="email"
-                label="Email"
-                type="email"
-                required
-                fullWidth
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                id="password"
-                name="password"
-                label="Password"
-                type="password"
-                required
-                fullWidth
-              />
 
-              <Select
-                native
-                id="role"
-                name="role"
-                label="Role"
-                style={{ marginTop: "7px" }}
-                inputProps={{
-                  name: "role",
-                  id: "role",
-                }}
-                required
-                fullWidth
-              >
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-              </Select>
+        <CreateUserModal
+          open={open}
+          onClose={handleClose}
+          onSubmit={handleSubmit}
+        />
 
-              {/* <DialogContentText>Content</DialogContentText> */}
-              <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button type="submit">Create</Button>
-              </DialogActions>
-            </form>
-          </DialogContent>
-        </Dialog>
-
-        {/* Table to display users */}
-        <TableContainer
-          component={Paper}
-          style={{ margin: "auto", width: "95%", overflowX: "auto" }}
-        >
-          <Table>
-            <TableHead
-              style={{
-                backgroundColor: "#dfdfdf",
-              }}
-            >
-              <TableRow>
-                <TableCell>First Name</TableCell>
-                <TableCell>Last Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Role</TableCell>
-                <TableCell>Status</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {users.map((user: any) => (
-                <TableRow key={user.id}>
-                  <TableCell>{user.firstName}</TableCell>
-                  <TableCell>{user.lastName}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.role}</TableCell>
-                  <TableCell>{user.status}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <UsersTable users={users} />
       </Box>
     </>
   );

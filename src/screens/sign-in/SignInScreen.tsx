@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { Form, Input, Button, Layout, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
-
 import {
   getLocalStorageWithExpiry,
   setLocalStorageWithExpiry,
 } from "../../core/utils/utils";
 import { SIGN_IN_EMAIL_LOCAL_STORAGE_KEY } from "../../auth/core/AuthServices";
+import "./styles/index.scss";
 
 const SignInScreen = () => {
   const [form] = Form.useForm();
@@ -26,53 +26,19 @@ const SignInScreen = () => {
   }, [email, form]);
 
   return (
-    <Layout
-      style={{
-        height: "96vh",
-        backgroundColor: "transparent",
-        padding: 50,
-        flexDirection: "column",
-        overflow: "hidden",
-        width: "100%",
-      }}
-    >
-      <Row style={{ height: "100%" }}>
-        <Col style={{ height: "100%", width: "100%" }}>
-          <Row style={{ width: "100%" }}>
-            <Col
-              style={{
-                lineHeight: "0.2rem",
-                margin: "auto",
-                marginLeft: "0",
-                color: "#3a3c3d",
-              }}
-            >
+    <Layout className="sign-in-layout">
+      <Row className="full-height">
+        <Col className="full-width">
+          <Row className="full-width">
+            <Col className="center-content">
               <h1>{process.env.REACT_APP_COMPANY_NAME}</h1>
               <p>Software Development Services</p>
             </Col>
           </Row>
-          <Row style={{ height: "100%" }}>
-            <Col style={{ width: "70%", position: "absolute", bottom: 0 }}>
-              <h2
-                style={{
-                  color: "#3a3c3d",
-                  lineHeight: "35px",
-                  margin: 0,
-                }}
-              >
-                Sign In
-              </h2>
-              <p
-                style={{
-                  color: "#A7AFBE",
-                  padding: 0,
-                  lineHeight: "20px",
-                  margin: 0,
-                }}
-                className="light"
-              >
-                Please enter your email address.
-              </p>
+          <Row className="full-height">
+            <Col className="sign-in-col">
+              <h2 className="sign-in-title">Sign In</h2>
+              <p className="sign-in-light">Please enter your email address.</p>
 
               <Form
                 name="normal_login"
@@ -83,7 +49,7 @@ const SignInScreen = () => {
                 <Form.Item
                   initialValue={email}
                   name="email"
-                  style={{ width: "250px" }}
+                  className="input-container"
                   rules={[
                     {
                       type: "email",
@@ -97,12 +63,11 @@ const SignInScreen = () => {
                     className="login-form-input"
                   />
                 </Form.Item>
-                <Form.Item style={{ marginBottom: 0 }}>
+                <Form.Item className="mb-0">
                   <Button
                     type="default"
                     htmlType="submit"
-                    className="login-form-button"
-                    style={{ borderRadius: "20px", padding: "0 30px" }}
+                    className="next-button login-form-button"
                   >
                     Next
                   </Button>

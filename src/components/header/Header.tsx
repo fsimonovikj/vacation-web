@@ -1,16 +1,17 @@
+import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import { Button } from "antd";
-
 import { AppPathEnum } from "../../enums/path-enum";
 import { UserRole, VacationI } from "../../interfaces/types";
-import { useEffect, useState } from "react";
 import { useAuth } from "../../auth/core/Auth";
 import { capitalizeFirstLetter } from "../../core/utils/utils";
 import CodefixClient from "../../services/CodefixClient";
+import "../../styles/header.scss";
+import UserInfo from "./UserInfo";
 
 export const Header = () => {
   const [vacationDays, setVacationDays] = useState<number>(0);
   const [vacations, setVacations] = useState<VacationI[]>([]);
+  const [menuOpen, setMenuOpen] = useState(false);
   const activeMenu = window.location.pathname;
   const client = new CodefixClient();
   const { user } = useAuth();
@@ -30,53 +31,82 @@ export const Header = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
   return (
     <>
-      <Box
-        position="absolute"
-        left={0}
-        top={0}
-        style={{
-          width: "90%",
-          height: "90%",
-          padding: "5%",
-          fontSize: "12px",
-        }}
+      {/* Hamburger Menu Icon */}
+      <div
+        className={`hamburger ${menuOpen ? "open" : ""}`}
+        onClick={toggleMenu}
       >
-        <Box style={{ lineHeight: "0.2rem", textAlign: "center" }}>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+
+      {/* Mobile Full-Screen Menu */}
+      <div className={`mobile-menu ${menuOpen ? "open" : ""}`}>
+        <ul>
+          {(() => {
+            if (user && user.role === UserRole.Admin) {
+              return Object.values(AppPathEnum).map((path) => (
+                <li key={path} onClick={toggleMenu}>
+                  <a href={path}>{capitalizeFirstLetter(path.split("/")[1])}</a>
+                </li>
+              ));
+            } else if (user && user.role === UserRole.User) {
+              return Object.values(AppPathEnum).map((path) => {
+                if (path === AppPathEnum.MAIN) {
+                  return (
+                    <li key={path} onClick={toggleMenu}>
+                      <a href={path}>
+                        {capitalizeFirstLetter(path.split("/")[1])}
+                      </a>
+                    </li>
+                  );
+                }
+                return null; // Hide other menu items for regular users
+              });
+            }
+          })()}
+        </ul>
+
+        {user ? (
+          <Box className="mobile-user-info">
+            <UserInfo
+              vacationDays={vacationDays}
+              vacations={vacations}
+              user={user}
+            />
+          </Box>
+        ) : null}
+      </div>
+
+      {/* Desktop Header (only visible on larger screens) */}
+      <Box className="header-container">
+        <Box className="header-title">
           <h2>{process.env.REACT_APP_COMPANY_NAME}</h2>
           <p>Software Development Services</p>
         </Box>
 
-        <Box style={{ marginTop: "5rem" }}>
+        <Box className="header-menu">
           <ul>
             {(() => {
               if (user && user.role === UserRole.Admin) {
                 return Object.values(AppPathEnum).map((path) => (
                   <li
                     key={path}
-                    style={{
-                      padding: "10px 15px",
-                      cursor: "pointer",
-                      display: "flex",
-                      justifyContent: "end",
-                      color: "#000000",
-                      fontWeight: 500,
-                      fontSize: "16px",
-                      lineHeight: "22px",
-                      marginRight: "-6%",
-                      borderTopLeftRadius: "20px",
-                      borderBottomLeftRadius: "20px",
-                      backgroundColor:
-                        activeMenu === path ? "#FFFFFF" : "transparent",
-                    }}
+                    className={`header-menu-item ${
+                      activeMenu === path ? "active" : ""
+                    }`}
                   >
                     <a
-                      className="header-link"
-                      style={{
-                        textDecoration: "none",
-                        color: activeMenu === path ? "#000000" : "#FFFFFF",
-                      }}
+                      className={`header-link ${
+                        activeMenu === path ? "active" : "inactive"
+                      }`}
                       href={path}
                     >
                       {capitalizeFirstLetter(path.split("/")[1])}
@@ -89,28 +119,14 @@ export const Header = () => {
                     return (
                       <li
                         key={path}
-                        style={{
-                          padding: "10px 15px",
-                          cursor: "pointer",
-                          display: "flex",
-                          justifyContent: "end",
-                          color: "#000000",
-                          fontWeight: 500,
-                          fontSize: "16px",
-                          lineHeight: "22px",
-                          marginRight: "-6%",
-                          borderTopLeftRadius: "20px",
-                          borderBottomLeftRadius: "20px",
-                          backgroundColor:
-                            activeMenu === path ? "#FFFFFF" : "transparent",
-                        }}
+                        className={`header-menu-item ${
+                          activeMenu === path ? "active" : ""
+                        }`}
                       >
                         <a
-                          className="header-link"
-                          style={{
-                            textDecoration: "none",
-                            color: activeMenu === path ? "#000000" : "#FFFFFF",
-                          }}
+                          className={`header-link ${
+                            activeMenu === path ? "active" : "inactive"
+                          }`}
                           href={path}
                         >
                           {capitalizeFirstLetter(path.split("/")[1])}
@@ -125,49 +141,12 @@ export const Header = () => {
           </ul>
         </Box>
 
-        <Box
-          position="absolute"
-          bottom={0}
-          style={{ textAlign: "center", width: "90%" }}
-        >
-          {user ? (
-            <>
-              <Box style={{ textAlign: "center", marginTop: "2rem" }}>
-                <h3>
-                  <h3
-                    style={{
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    remaining days : {vacationDays}
-                  </h3>
-                </h3>
-                <Box style={{ textAlign: "center", marginTop: "1rem" }}>
-                  {vacations.map((vacation: any) => (
-                    <div key={vacation.id}>
-                      <p>
-                        {vacation.title}: {vacation.days} days
-                      </p>
-                    </div>
-                  ))}
-                </Box>
-              </Box>
-              <Box style={{ textAlign: "center", marginTop: "2rem" }}>
-                <h3>
-                  {user.firstName} {user.lastName}
-                </h3>
-              </Box>
-            </>
-          ) : null}
-          <Button
-            type="default"
-            htmlType="submit"
-            className="login-form-button"
-            style={{ borderRadius: "20px", padding: "0 30px" }}
-            onClick={client.logout}
-          >
-            Logout
-          </Button>
+        <Box className="header-bottom">
+          <UserInfo
+            vacationDays={vacationDays}
+            vacations={vacations}
+            user={user!}
+          />
         </Box>
       </Box>
     </>
