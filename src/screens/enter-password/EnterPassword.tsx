@@ -57,12 +57,13 @@ const EnterPassword = () => {
                     value={email ?? ""}
                   />
                 </Form.Item>
-                <h3 className="light">Please enter your password.</h3>
+                <h3 className="password-light">Please enter your password.</h3>
                 {error && (
                   <Form.Item
                     name="password"
                     validateStatus="error"
                     help="Incorrect password"
+                    className="input-container"
                     rules={[
                       {
                         required: true,
@@ -71,7 +72,7 @@ const EnterPassword = () => {
                     ]}
                   >
                     <Input
-                      className="error-input login-form-input light"
+                      className="error-input login-form-input password-light"
                       type="password"
                       placeholder="Please enter your password."
                     />
@@ -80,6 +81,7 @@ const EnterPassword = () => {
                 {!error && (
                   <Form.Item
                     name="password"
+                    className="input-container"
                     rules={[
                       {
                         required: true,

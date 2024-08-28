@@ -103,6 +103,13 @@ export interface VacationPlanI {
   start: Date;
   end: Date;
   days: number;
+  details?: UserPlanDetailsI[];
+}
+
+export interface UserPlanDetailsI {
+  id: string;
+  name: string;
+  remainingDays: number;
 }
 
 export interface BookingRequestI {

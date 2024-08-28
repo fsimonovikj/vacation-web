@@ -127,7 +127,7 @@ class CodefixClient {
   async receiveVacationPlan(): Promise<any> {
     try {
       const response = await axiosApi.get(
-        `${webConfig.apiBaseUrl}/vacation-plan/lists`
+        `${webConfig.apiBaseUrl}/vacation-plan/details`
       );
 
       return response.data;
