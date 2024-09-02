@@ -1,21 +1,62 @@
 // VacationPlanItem.tsx
-import React from "react";
-import { Box, Collapse, Typography as MuiTypography } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Box,
+  Card,
+  CardContent,
+  Collapse,
+  IconButton,
+  Typography as MuiTypography,
+} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import { VacationPlanI } from "../../interfaces/types";
+import EditIcon from "@mui/icons-material/Edit";
+import {
+  UserPlanDetailsI,
+  UserViewModel,
+  VacationPlanI,
+} from "../../interfaces/types";
+import EditVacationModal from "./EditVacationModal";
+import CodefixClient from "../../services/CodefixClient";
 
 interface VacationPlanItemProps {
   vacation: VacationPlanI;
   isOpen: boolean;
   onToggle: () => void;
+  onUpdated: () => void;
 }
 
 const VacationPlanItem: React.FC<VacationPlanItemProps> = ({
   vacation,
   isOpen,
   onToggle,
+  onUpdated,
 }) => {
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserViewModel | null>(null);
+  const client = new CodefixClient();
+
+  const handleEditClick = (user: UserViewModel) => {
+    setSelectedUser(user);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedUser(null);
+  };
+
+  const handleModalSubmit = async (req: UserPlanDetailsI) => {
+    try {
+      await client.updateVacationDays(req);
+
+      onUpdated();
+      handleCloseModal();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   return (
     <Box
       className="vacation-plan-item"
@@ -43,24 +84,55 @@ const VacationPlanItem: React.FC<VacationPlanItemProps> = ({
       </MuiTypography>
 
       <Collapse in={isOpen}>
-        <Box className="collapse-content" sx={{ marginTop: 2 }}>
+        <Box
+          display="flex"
+          flexWrap="wrap"
+          gap={2}
+          sx={{
+            marginTop: 3,
+          }}
+        >
           {vacation.details?.map((user) => (
-            <Box
+            <Card
               key={user.id}
-              className="vacation-plan-summary"
-              sx={{ marginBottom: 2 }}
+              sx={{
+                width: 250,
+                boxShadow: 3,
+                borderRadius: 2,
+                overflow: "hidden",
+                position: "relative", // Positioning relative to allow the button to be placed absolutely
+              }}
             >
-              <MuiTypography variant="subtitle1" sx={{ fontWeight: 500 }}>
-                {user.name}
-              </MuiTypography>
-              <MuiTypography variant="body2">
-                <span className="vacation-plan-summary-text">
-                  Remaining days:
-                </span>{" "}
-                {user.remainingDays}
-              </MuiTypography>
-            </Box>
+              <IconButton
+                sx={{ position: "absolute", right: 8, top: 8 }} // Positioning the button at the top right
+                aria-label="edit"
+                onClick={() => handleEditClick(user)}
+              >
+                <EditIcon />
+              </IconButton>
+              <CardContent sx={{ paddingBottom: 2 }}>
+                <MuiTypography variant="h6" sx={{ fontWeight: 600 }}>
+                  {user.firstName}
+                </MuiTypography>
+                <MuiTypography variant="h6" sx={{ fontWeight: 600 }}>
+                  {user.lastName}
+                </MuiTypography>
+                <MuiTypography variant="body1" sx={{ color: "text.secondary" }}>
+                  Remaining days: <strong>{user.remainingDays}</strong>
+                </MuiTypography>
+              </CardContent>
+            </Card>
           ))}
+
+          {selectedUser && (
+            <EditVacationModal
+              open={isModalOpen}
+              onClose={handleCloseModal}
+              onSubmit={handleModalSubmit}
+              user={selectedUser}
+              vacation={vacation}
+            />
+          )}
         </Box>
       </Collapse>
     </Box>

@@ -12,9 +12,9 @@ export interface UserViewModel {
   statistics?: any[];
   token?: string;
   company?: any;
-  department?: string;
-  status?: string;
-  role?: any;
+  department?: UserDepartment;
+  status?: UserStatus;
+  role?: UserRole;
 }
 
 export interface InstalledProducts {
@@ -58,6 +58,25 @@ export enum UserRole {
   User = "user",
 }
 
+export enum UserStatus {
+  Deactivated = "deactivated",
+  Pending = "pending",
+  Active = "active",
+  Inactive = "inactive",
+}
+
+export enum UserDepartment {
+  Director = "director",
+  CEO = "ceo",
+  HEAD = "head",
+  Dev = "dev",
+  HR = "hr",
+  Finance = "finance",
+  Marketing = "marketing",
+  Sales = "sales",
+  Other = "other",
+}
+
 export interface User {
   id?: string;
   firstName?: string;
@@ -69,8 +88,8 @@ export interface User {
   statistics?: any[];
   token?: string;
   company?: any;
-  department?: string;
-  status?: string;
+  department?: UserDepartment;
+  status?: UserStatus;
   role?: UserRole;
 }
 
@@ -108,8 +127,10 @@ export interface VacationPlanI {
 
 export interface UserPlanDetailsI {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   remainingDays: number;
+  vacationId: number | null;
 }
 
 export interface BookingRequestI {
@@ -133,4 +154,11 @@ export interface VacationPlanRequestI {
   start: Date;
   end: Date;
   days: number;
+}
+
+export interface HolidayRequestI {
+  title: string;
+  description: string;
+  start: Date;
+  end: Date;
 }

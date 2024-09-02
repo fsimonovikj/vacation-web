@@ -2,6 +2,8 @@
 import axios from "axios";
 import {
   BookingRequestI,
+  HolidayRequestI,
+  UserPlanDetailsI,
   UserViewModel,
   VacationPlanRequestI,
 } from "../interfaces/types";
@@ -124,6 +126,19 @@ class CodefixClient {
     }
   }
 
+  async requestHoliday(event: HolidayRequestI): Promise<any> {
+    try {
+      const request = await axiosApi.post(
+        `${webConfig.apiBaseUrl}/holidays`,
+        event
+      );
+
+      return request;
+    } catch (error) {
+      throw new Error("Error booking vacation");
+    }
+  }
+
   async receiveVacationPlan(): Promise<any> {
     try {
       const response = await axiosApi.get(
@@ -161,6 +176,19 @@ class CodefixClient {
     }
   }
 
+  async updateUser(event: UserViewModel): Promise<any> {
+    try {
+      const request = await axiosApi.put(
+        `${webConfig.apiBaseUrl}/users`,
+        event
+      );
+
+      return request;
+    } catch (error) {
+      throw new Error("Error updating user");
+    }
+  }
+
   async requestUser(event: UserViewModel): Promise<any> {
     try {
       const request = await axiosApi.post(
@@ -171,6 +199,31 @@ class CodefixClient {
       return request;
     } catch (error) {
       throw new Error("Error creating user");
+    }
+  }
+
+  async updateVacationDays(req: UserPlanDetailsI): Promise<any> {
+    try {
+      const request = await axiosApi.put(
+        `${webConfig.apiBaseUrl}/vacation/update`,
+        req
+      );
+
+      return request;
+    } catch (error) {
+      throw new Error("Error updating vacation plan");
+    }
+  }
+  async deactivateUser(req: UserViewModel): Promise<any> {
+    try {
+      const request = await axiosApi.put(
+        `${webConfig.apiBaseUrl}/users/deactivate`,
+        req
+      );
+
+      return request;
+    } catch (error) {
+      throw new Error("Error deactivating user");
     }
   }
 

@@ -7,7 +7,11 @@ import {
   TextField,
   Select,
   Button,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
+import { UserDepartment, UserRole } from "../../interfaces/types";
 
 interface CreateUserModalProps {
   open: boolean;
@@ -36,7 +40,6 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({
             fullWidth
           />
           <TextField
-            autoFocus
             margin="dense"
             id="lastName"
             name="lastName"
@@ -46,7 +49,6 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({
             fullWidth
           />
           <TextField
-            autoFocus
             margin="dense"
             id="email"
             name="email"
@@ -56,7 +58,6 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({
             fullWidth
           />
           <TextField
-            autoFocus
             margin="dense"
             id="password"
             name="password"
@@ -66,22 +67,34 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({
             fullWidth
           />
 
-          <Select
-            native
-            id="role"
-            name="role"
-            label="Role"
-            className="select-role"
-            inputProps={{
-              name: "role",
-              id: "role",
-            }}
-            required
-            fullWidth
-          >
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </Select>
+          <FormControl margin="dense" fullWidth>
+            <InputLabel id="role-label">Role</InputLabel>
+            <Select label="Role" id="role" name="role" required fullWidth>
+              {Object.values(UserRole).map((roleValue) => (
+                <MenuItem key={roleValue} value={roleValue}>
+                  {roleValue.charAt(0).toUpperCase() + roleValue.slice(1)}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl margin="dense" fullWidth>
+            <InputLabel id="department-label">Department</InputLabel>
+            <Select
+              label="Department"
+              id="department"
+              name="department"
+              required
+              fullWidth
+            >
+              {Object.values(UserDepartment).map((departmentValue) => (
+                <MenuItem key={departmentValue} value={departmentValue}>
+                  {departmentValue.charAt(0).toUpperCase() +
+                    departmentValue.slice(1)}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
           <DialogActions>
             <Button onClick={onClose}>Cancel</Button>

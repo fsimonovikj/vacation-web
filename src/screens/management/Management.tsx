@@ -6,13 +6,17 @@ import { useEffect, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
 import CodefixClient from "../../services/CodefixClient";
 import "./styles/index.scss";
-import CreateVacationModal from "../../components/management/CreateVacationModal";
+import CreateVacationModal, {
+  VacationData,
+} from "../../components/management/CreateVacationModal";
 import VacationPlanItem from "../../components/management/VacationPlanItem";
+import CreateHolidayModal from "../../components/management/CreateHolidayModal";
 
 const Management = () => {
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
   const [vacationPlan, setVacationPlan] = useState<VacationPlanI[]>([]);
-  const [open, setOpen] = useState(false);
+  const [openVacation, setOpenVacation] = useState(false);
+  const [openHoliday, setOpenHoliday] = useState(false);
   const client = new CodefixClient();
 
   useEffect(() => {
@@ -29,15 +33,26 @@ const Management = () => {
     // eslint-disable-next-line
   }, []);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmitVacation = async (vacationData: VacationData) => {
     try {
       const newVacationPlan: VacationPlanI = {
         id: uuidV4(),
-        title: (event.target as any).title.value,
-        start: (event.target as any).start.value,
-        end: (event.target as any).end.value,
-        days: (event.target as any).days.value,
+        title: vacationData.title,
+        start: new Date(
+          Date.UTC(
+            vacationData.start.getFullYear(),
+            vacationData.start.getMonth(),
+            vacationData.start.getDate()
+          )
+        ),
+        end: new Date(
+          Date.UTC(
+            vacationData.end.getFullYear(),
+            vacationData.end.getMonth(),
+            vacationData.end.getDate()
+          )
+        ),
+        days: vacationData.days,
         createdAt: new Date(),
         deletedAt: null,
       };
@@ -46,7 +61,47 @@ const Management = () => {
 
       setVacationPlan((prevPlans) => [...prevPlans, newVacationPlan]);
 
-      handleClose();
+      handleCloseVacation();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleSubmitHoliday = async (holidayData: {
+    title: string;
+    description: string;
+    start: Date;
+    end: Date;
+  }) => {
+    try {
+      const startUtc = new Date(
+        Date.UTC(
+          holidayData.start.getFullYear(),
+          holidayData.start.getMonth(),
+          holidayData.start.getDate()
+        )
+      );
+
+      let endUtc = new Date(
+        Date.UTC(
+          holidayData.end.getFullYear(),
+          holidayData.end.getMonth(),
+          holidayData.end.getDate()
+        )
+      );
+
+      endUtc.setUTCDate(endUtc.getUTCDate() + 1);
+
+      const holidayDataUtc = {
+        ...holidayData,
+        start: startUtc,
+        end: endUtc,
+      };
+
+      console.log(`new Holiday in UTC`, holidayDataUtc);
+
+      await client.requestHoliday(holidayDataUtc);
+      handleHolidayClose();
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -59,12 +114,31 @@ const Management = () => {
     }));
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpenVacation = () => {
+    setOpenVacation(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseVacation = () => {
+    setOpenVacation(false);
+  };
+
+  const handleHolidayClickOpen = () => {
+    setOpenHoliday(true);
+  };
+
+  const handleHolidayClose = () => {
+    setOpenHoliday(false);
+  };
+
+  const onUpdated = async () => {
+    try {
+      const vacationPlan = await client.receiveVacationPlan();
+
+      console.log(`vacationPlan`, vacationPlan);
+      setVacationPlan(vacationPlan);
+    } catch (error) {
+      console.error("Error fetching vacation days:", error);
+    }
   };
 
   return (
@@ -76,15 +150,29 @@ const Management = () => {
         <Button
           id="create-vacation-btn"
           className="create-vacation-btn"
-          onClick={handleClickOpen}
+          onClick={handleClickOpenVacation}
         >
           Create Vacation +
         </Button>
 
+        <Button
+          id="create-vacation-btn"
+          className="create-vacation-btn"
+          onClick={handleHolidayClickOpen}
+        >
+          Create Holiday +
+        </Button>
+
         <CreateVacationModal
-          open={open}
-          onClose={handleClose}
-          onSubmit={handleSubmit}
+          open={openVacation}
+          onClose={handleCloseVacation}
+          onSubmit={handleSubmitVacation}
+        />
+
+        <CreateHolidayModal
+          open={openHoliday}
+          onClose={handleHolidayClose}
+          onSubmit={handleSubmitHoliday}
         />
 
         <Box className="vacation-plan-container">
@@ -94,6 +182,7 @@ const Management = () => {
               vacation={vacation}
               isOpen={openItems[vacation.id]}
               onToggle={() => handleToggle(vacation.id)}
+              onUpdated={onUpdated}
             />
           ))}
         </Box>

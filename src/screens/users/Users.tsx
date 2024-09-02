@@ -1,10 +1,11 @@
-import {
-  Box,
-  Button,
-} from "@mui/material";
+import { Box, Button } from "@mui/material";
 import "leaflet/dist/leaflet.css";
 import { Header } from "../../components/header/Header";
-import { UserViewModel } from "../../interfaces/types";
+import {
+  UserDepartment,
+  UserStatus,
+  UserViewModel,
+} from "../../interfaces/types";
 import { useEffect, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
 import { useAuth } from "../../auth/core/Auth";
@@ -48,15 +49,24 @@ const Users = () => {
         lastName: (event.target as any).lastName.value,
         email: (event.target as any).email.value,
         password: (event.target as any).password.value,
-        department: "dev",
+        department: UserDepartment.Other,
         role: (event.target as any).role.value,
         companyId: user!.companyId,
-        status: "active",
+        status: UserStatus.Active,
       };
 
       await client.requestUser(newUser);
       setUsers((prevUsers) => [...prevUsers, newUser]);
       handleClose();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const onUpdated = async () => {
+    try {
+      const response = await client.receiveUsers(user!.companyId as string);
+      setUsers(response);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -78,7 +88,7 @@ const Users = () => {
           onSubmit={handleSubmit}
         />
 
-        <UsersTable users={users} />
+        <UsersTable users={users} onUpdated={onUpdated} />
       </Box>
     </>
   );
