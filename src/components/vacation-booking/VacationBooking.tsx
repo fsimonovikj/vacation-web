@@ -20,18 +20,21 @@ import {
   BOOKING_BEFORE_START_VACATION,
   CANNOT_BOOK_IN_MOMENT,
   REQUEST_MUCH_VACATION_DAYS,
-  REQUEST_SENT_EXPLANATION,
   REQUEST_SENT_SUCCESSFULLY,
 } from "../../core/messages";
 import { getLocalizedMessage } from "../../core/utils/utils";
 import { useAuth } from "../../auth/core/Auth";
 import CodefixClient from "../../services/CodefixClient";
 import "../../styles/calendar.scss";
+import VacationRequestModal from "./VacationRequestModal";
 
 const VacationBooking = () => {
   const [vacations, setVacations] = useState<VacationI[]>([]);
   const [vacationDays, setVacationDays] = useState<number>(0);
   const [events, setEvents] = useState<EventI[]>([]);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [selectedInfo, setSelectedInfo] = useState<any>(null);
+  const [description, setDescription] = useState<string>("");
   const calendarRef = useRef(null);
   const client = new CodefixClient();
   const { user } = useAuth();
@@ -91,19 +94,35 @@ const VacationBooking = () => {
 
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Set current time to 00:00:00
+    const startDate = new Date(selectInfo.start);
+    const endDate = new Date(selectInfo.end);
 
-    if (selectInfo.start < today) {
+    if (startDate < today) {
       toast.error(getLocalizedMessage(BOOK_IN_PAST));
       return;
     }
 
+    // Adjust endDate to ensure it doesn't include the end date itself if it's a weekend
+    if (startDate < endDate) {
+      endDate.setDate(endDate.getDate() - 1);
+    }
+
+    // Calculate the number of weekdays (Monday to Friday) between the start and end dates
     let count = 0;
-    let date = new Date(selectInfo.startStr);
-    while (date <= selectInfo.end) {
-      if (date.getDay() !== 0 && date.getDay() !== 6) {
+    let currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      const dayOfWeek = currentDate.getDay();
+      if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+        // Skip Sundays (0) and Saturdays (6)
         count++;
       }
-      date.setDate(date.getDate() + 1);
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    if (count === 0) {
+      toast.error("You can only book vacation days from Monday to Friday.");
+      return;
     }
 
     if (vacations && count > vacations[0].days) {
@@ -111,37 +130,8 @@ const VacationBooking = () => {
       return;
     }
 
-    if (count > 0) {
-      const title = prompt(getLocalizedMessage(REQUEST_SENT_EXPLANATION));
-
-      if (title && user) {
-        const newEvent = {
-          id: uuidV4(),
-          title: user.firstName + " " + user.lastName,
-          description: title,
-          start: selectInfo.startStr,
-          end: selectInfo.endStr || selectInfo.startStr,
-          userId: user.id,
-          allDay: true,
-          bookedDays: count,
-          user: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          status: VacationStatusEnum.Pending,
-          editable: true,
-          vacationId: vacations[0].id,
-        };
-
-        // setEvents([...events, newEvent]);
-
-        (async () => {
-          await client.requestBookingDays(newEvent as BookingRequestI);
-          await client.requestBookingRequest(newEvent as BookingRequestI);
-
-          toast.success(getLocalizedMessage(REQUEST_SENT_SUCCESSFULLY));
-        })();
-      }
-    }
+    setSelectedInfo({ ...selectInfo, count }); // Save the selected info and count
+    setOpenModal(true); // Open the modal
   };
 
   const handleEventMount = (info: any) => {
@@ -158,6 +148,69 @@ const VacationBooking = () => {
     });
   };
 
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setDescription("");
+  };
+
+  const handleSave = async () => {
+    if (!description) {
+      toast.error("Please enter a description for your vacation.");
+      return;
+    }
+
+    if (selectedInfo && user) {
+      const newEvent = {
+        id: uuidV4(),
+        title: user.firstName + " " + user.lastName,
+        description: description,
+        start: selectedInfo.start,
+        end: selectedInfo.end || selectedInfo.start,
+        userId: user.id,
+        allDay: true,
+        bookedDays: selectedInfo.count,
+        user: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        status: VacationStatusEnum.Pending,
+        editable: true,
+        vacationId: vacations[0].id,
+      };
+
+      await client.requestBookingDays(newEvent as BookingRequestI);
+      await client.requestBookingRequest(newEvent as BookingRequestI);
+
+      setEvents([
+        ...events,
+        {
+          title: newEvent.title,
+          description: newEvent.description,
+          start: newEvent.start,
+          end: newEvent.end,
+          allDay: true,
+          classNames: "vacation-event-pending",
+        },
+      ]);
+
+      toast.success(getLocalizedMessage(REQUEST_SENT_SUCCESSFULLY));
+      handleCloseModal(); // Close the modal after saving
+    }
+  };
+
+  const handleNavLinkDayClick = (date: Date) => {
+    const utcDate = new Date(
+      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+    );
+
+    const selectInfo = {
+      start: utcDate,
+      end: utcDate,
+      startStr: utcDate.toISOString().split("T")[0],
+      endStr: utcDate.toISOString().split("T")[0],
+    };
+    handleSelect(selectInfo);
+  };
+
   return (
     <>
       <Box
@@ -166,21 +219,21 @@ const VacationBooking = () => {
           justifyContent: "center",
           alignItems: "center",
           margin: "auto",
-          marginTop: "3%",
+          marginTop: "1rem",
         }}
       >
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           headerToolbar={{
-            left: "prev,next today",
+            left: "prev,next",
             center: "title",
-            right: "dayGridMonth,timeGridWeek,timeGridDay",
+            right: "today",
           }}
           initialDate={new Date()}
           businessHours={true}
           editable={user && user.role === UserRole.Admin ? true : false}
           selectable={true}
-          initialView={"dayGridMonth"}
+          initialView="dayGridMonth"
           select={handleSelect}
           events={events}
           ref={calendarRef}
@@ -190,8 +243,18 @@ const VacationBooking = () => {
           dragScroll={true}
           navLinks={true}
           height="auto"
+          navLinkDayClick={(date) => handleNavLinkDayClick(date)}
         />
       </Box>
+
+      <VacationRequestModal
+        open={openModal}
+        onClose={handleCloseModal}
+        onSave={handleSave}
+        description={description}
+        setDescription={setDescription}
+        selectedInfo={selectedInfo}
+      />
     </>
   );
 };

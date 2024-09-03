@@ -98,8 +98,6 @@ const Management = () => {
         end: endUtc,
       };
 
-      console.log(`new Holiday in UTC`, holidayDataUtc);
-
       await client.requestHoliday(holidayDataUtc);
       handleHolidayClose();
     } catch (error) {
@@ -134,7 +132,6 @@ const Management = () => {
     try {
       const vacationPlan = await client.receiveVacationPlan();
 
-      console.log(`vacationPlan`, vacationPlan);
       setVacationPlan(vacationPlan);
     } catch (error) {
       console.error("Error fetching vacation days:", error);

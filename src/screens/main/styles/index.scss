@@ -1,3 +1,8 @@
+$primary-color: #1976d2;
+$secondary-color: #333;
+$light-gray: #ccc;
+$dark-gray: #888;
+$background-color: #f5f5f5;
 $mobile: 480px;
 $tablet: 768px;
 .main-screen-vacation {
@@ -28,5 +33,70 @@ $tablet: 768px;
         height: 55px;
         /* Adjust as needed for the hamburger menu height */
         z-index: 1001;
+    }
+}
+
+.modal-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background-color: $background-color;
+    box-shadow: 24px;
+    padding: 40px;
+    border-radius: 12px;
+}
+
+.modal-title {
+    font-weight: bold;
+    text-align: center;
+    color: $secondary-color;
+    padding-bottom: 1rem;
+}
+
+.preview-section {
+    margin-bottom: 1.5rem;
+    text-align: center;
+    .preview-text {
+        font-size: 1rem;
+        color: #666;
+    }
+}
+
+.text-field {
+    margin-bottom: 1.5rem;
+    .MuiOutlinedInput-root {
+        & fieldset {
+            border-color: $light-gray;
+        }
+        &:hover fieldset {
+            border-color: $dark-gray;
+        }
+        &.Mui-focused fieldset {
+            border-color: $primary-color;
+        }
+    }
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    .cancel-button {
+        color: #555;
+        text-transform: none;
+    }
+    .save-button {
+        background-color: $primary-color;
+        color: #fff;
+        border-radius: 8px;
+        padding: 8px 16px;
+        box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
+        text-transform: none;
+        &:hover {
+            background-color: darken($primary-color, 10%);
+        }
     }
 }
