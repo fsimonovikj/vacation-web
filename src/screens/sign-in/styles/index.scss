@@ -1,6 +1,10 @@
 .sign-in-layout {
-    height: 96vh;
+    height: 100vh;
+    background-image: url('../../../../public/leave-dates.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
     background-color: transparent;
+    background-size: cover;
     padding: 50px;
     flex-direction: column;
     overflow: hidden;

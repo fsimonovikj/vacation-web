@@ -107,7 +107,9 @@ const CreateVacationModal: React.FC<CreateVacationModalProps> = ({
 
           <DialogActions>
             <Button onClick={onClose}>Cancel</Button>
-            <Button type="submit">Create</Button>
+            <Button type="submit" color="primary" variant="contained">
+              Create
+            </Button>
           </DialogActions>
         </form>
       </DialogContent>

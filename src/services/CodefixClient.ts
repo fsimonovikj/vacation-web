@@ -151,6 +151,22 @@ class CodefixClient {
     }
   }
 
+  async receiveAvailableUsersForVacation(vacationId: string): Promise<any> {
+    const response = await axiosApi
+      .get(
+        `${webConfig.apiBaseUrl}/vacation-plan/available-users/${vacationId}`
+      )
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+        return [];
+      });
+
+    return response;
+  }
+
   async requestVacationPlan(event: VacationPlanRequestI): Promise<any> {
     try {
       const request = await axiosApi.post(
@@ -161,6 +177,22 @@ class CodefixClient {
       return request;
     } catch (error) {
       throw new Error("Error booking vacation");
+    }
+  }
+
+  async requestAddUsersToVacation(
+    vacationId: string,
+    userIds: string[]
+  ): Promise<any> {
+    try {
+      const request = await axiosApi.post(
+        `${webConfig.apiBaseUrl}/vacation-plan/add-users/${vacationId}`,
+        userIds
+      );
+
+      return request;
+    } catch (error) {
+      throw new Error("Error adding users to vacation");
     }
   }
 

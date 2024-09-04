@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import {
   Box,
+  Button,
   Card,
   CardContent,
   Collapse,
@@ -18,6 +19,7 @@ import {
 } from "../../interfaces/types";
 import EditVacationModal from "./EditVacationModal";
 import CodefixClient from "../../services/CodefixClient";
+import AddUserToVacationModal from "./AddUserToVacationModal";
 
 interface VacationPlanItemProps {
   vacation: VacationPlanI;
@@ -57,6 +59,13 @@ const VacationPlanItem: React.FC<VacationPlanItemProps> = ({
     }
   };
 
+  const handleOpenAddUserModal = () => setModalOpen(true);
+  const handleCloseAddUserModal = () => setModalOpen(false);
+
+  const handleUserAdded = () => {
+    onUpdated();
+  };
+
   return (
     <Box
       className="vacation-plan-item"
@@ -92,37 +101,64 @@ const VacationPlanItem: React.FC<VacationPlanItemProps> = ({
             marginTop: 3,
           }}
         >
-          {vacation.details?.map((user) => (
-            <Card
-              key={user.id}
+          <Box
+            sx={{
+              width: "100%",
+            }}
+          >
+            <Button
+              id="create-vacation-btn"
               sx={{
-                width: 250,
-                boxShadow: 3,
-                borderRadius: 2,
-                overflow: "hidden",
-                position: "relative", // Positioning relative to allow the button to be placed absolutely
+                float: "right",
               }}
+              onClick={handleOpenAddUserModal}
             >
-              <IconButton
-                sx={{ position: "absolute", right: 8, top: 8 }} // Positioning the button at the top right
-                aria-label="edit"
-                onClick={() => handleEditClick(user)}
+              Add Vacation To User +
+            </Button>
+            <AddUserToVacationModal
+              open={isModalOpen}
+              onClose={handleCloseAddUserModal}
+              vacationId={vacation.id}
+              onUserAdded={handleUserAdded}
+            />
+          </Box>
+
+          {vacation &&
+            vacation.details &&
+            vacation.details.map((user) => (
+              <Card
+                key={user.id}
+                sx={{
+                  width: 250,
+                  boxShadow: 3,
+                  borderRadius: 2,
+                  overflow: "hidden",
+                  position: "relative", // Positioning relative to allow the button to be placed absolutely
+                }}
               >
-                <EditIcon />
-              </IconButton>
-              <CardContent sx={{ paddingBottom: 2 }}>
-                <MuiTypography variant="h6" sx={{ fontWeight: 600 }}>
-                  {user.firstName}
-                </MuiTypography>
-                <MuiTypography variant="h6" sx={{ fontWeight: 600 }}>
-                  {user.lastName}
-                </MuiTypography>
-                <MuiTypography variant="body1" sx={{ color: "text.secondary" }}>
-                  Remaining days: <strong>{user.remainingDays}</strong>
-                </MuiTypography>
-              </CardContent>
-            </Card>
-          ))}
+                <IconButton
+                  sx={{ position: "absolute", right: 8, top: 8 }} // Positioning the button at the top right
+                  aria-label="edit"
+                  onClick={() => handleEditClick(user)}
+                >
+                  <EditIcon />
+                </IconButton>
+                <CardContent sx={{ paddingBottom: 2 }}>
+                  <MuiTypography variant="h6" sx={{ fontWeight: 600 }}>
+                    {user.firstName}
+                  </MuiTypography>
+                  <MuiTypography variant="h6" sx={{ fontWeight: 600 }}>
+                    {user.lastName}
+                  </MuiTypography>
+                  <MuiTypography
+                    variant="body1"
+                    sx={{ color: "text.secondary" }}
+                  >
+                    Remaining days: <strong>{user.remainingDays}</strong>
+                  </MuiTypography>
+                </CardContent>
+              </Card>
+            ))}
 
           {selectedUser && (
             <EditVacationModal

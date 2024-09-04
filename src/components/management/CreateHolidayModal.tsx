@@ -105,7 +105,9 @@ const CreateHolidayModal: React.FC<CreateHolidayModalProps> = ({
 
           <DialogActions>
             <Button onClick={onClose}>Cancel</Button>
-            <Button type="submit">Create</Button>
+            <Button type="submit" color="primary" variant="contained">
+              Create
+            </Button>
           </DialogActions>
         </form>
       </DialogContent>

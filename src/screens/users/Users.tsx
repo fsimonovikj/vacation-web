@@ -1,11 +1,7 @@
 import { Box, Button } from "@mui/material";
 import "leaflet/dist/leaflet.css";
 import { Header } from "../../components/header/Header";
-import {
-  UserDepartment,
-  UserStatus,
-  UserViewModel,
-} from "../../interfaces/types";
+import { UserStatus, UserViewModel } from "../../interfaces/types";
 import { useEffect, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
 import { useAuth } from "../../auth/core/Auth";
@@ -49,8 +45,8 @@ const Users = () => {
         lastName: (event.target as any).lastName.value,
         email: (event.target as any).email.value,
         password: (event.target as any).password.value,
-        department: UserDepartment.Other,
         role: (event.target as any).role.value,
+        department: (event.target as any).department.value,
         companyId: user!.companyId,
         status: UserStatus.Active,
       };

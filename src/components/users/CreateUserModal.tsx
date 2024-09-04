@@ -98,7 +98,9 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({
 
           <DialogActions>
             <Button onClick={onClose}>Cancel</Button>
-            <Button type="submit">Create</Button>
+            <Button type="submit" color="primary" variant="contained">
+              Create
+            </Button>
           </DialogActions>
         </form>
       </DialogContent>
