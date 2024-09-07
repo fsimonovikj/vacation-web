@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 
 const PreviewImageSection = () => {
@@ -29,9 +29,11 @@ const PreviewImageSection = () => {
 
     return () => {
       if (sectionRef.current) {
+        // eslint-disable-next-line
         observer.unobserve(sectionRef.current);
       }
     };
+    // eslint-disable-next-line
   }, []);
 
   const getTransformStyle = () => {

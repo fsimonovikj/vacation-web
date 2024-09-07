@@ -1,5 +1,3 @@
-// LandingPage.js
-import React from "react";
 import VideoSection from "./sections/VideoSection";
 import PreviewImageSection from "./sections/PreviewImageSection";
 import BenefitsSection from "./sections/BenefitsSection";

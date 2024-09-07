@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Box, Typography } from "@mui/material";
 
 const BenefitsSection = () => {
@@ -23,10 +23,12 @@ const BenefitsSection = () => {
     });
 
     return () => {
+      // eslint-disable-next-line
       cardsRef.current.forEach((card) => {
         if (card) observer.unobserve(card);
       });
     };
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -214,8 +216,7 @@ const BenefitsSection = () => {
               padding: { xs: "0px 16px", lg: "0px 48px" },
             }}
           >
-            {/* Floating Images */}
-            <img
+            {/* <img
               src="/benefits/stacked-card-security-1.svg"
               alt="decorative image 1"
               style={{
@@ -225,8 +226,7 @@ const BenefitsSection = () => {
                 width: "30%",
                 zIndex: 1,
               }}
-            />
-
+            /> */}
             {/* Main Image */}
             <Box
               sx={{
