@@ -49,3 +49,8 @@
 .header-link :hover {
     color: #61dafb;
 }
+
+.card.inView {
+    opacity: 1;
+    transform: scale(1);
+}

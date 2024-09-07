@@ -19,3 +19,8 @@ body {
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+.card.inView {
+    opacity: 1;
+    transform: scale(1);
+}
