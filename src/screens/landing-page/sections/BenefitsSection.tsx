@@ -74,7 +74,7 @@ const BenefitsSection = () => {
           <Box className="video-container">
             <video
               className="benefits-video"
-              src="/benefits-video/video1.mp4"
+              src="/benefits-video/video3.mp4"
               autoPlay
               loop
               muted
@@ -101,14 +101,14 @@ const BenefitsSection = () => {
             </Typography>
           </Box>
           <Box className="video-container">
-            <video
+            {/* <video
               className="benefits-video"
               src="/benefits-video/video2.mp4"
               autoPlay
               loop
               muted
               playsInline
-            />
+            /> */}
           </Box>
         </Box>
 
@@ -131,14 +131,14 @@ const BenefitsSection = () => {
           </Box>
 
           <Box className="video-container">
-            <video
+            {/* <video
               className="benefits-video"
               src="/benefits-video/video3.mp4"
               autoPlay
               loop
               muted
               playsInline
-            />
+            /> */}
           </Box>
         </Box>
 
@@ -161,14 +161,14 @@ const BenefitsSection = () => {
           </Box>
 
           <Box className="video-container">
-            <video
+            {/* <video
               className="benefits-video"
               src="/benefits-video/video4.mp4"
               autoPlay
               loop
               muted
               playsInline
-            />
+            /> */}
           </Box>
         </Box>
       </Box>
