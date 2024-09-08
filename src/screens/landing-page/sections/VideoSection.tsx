@@ -31,7 +31,7 @@ const VideoSection = () => {
           objectFit: "cover",
         }}
       >
-        <source src="/video/video.mp4" type="video/mp4" />
+        <source src="/video/office.mp4" type="video/mp4" />
         <source src="/video/video.webm" type="video/webm" />
         {/* <source src="/leave-video.mp4" type="video/mp4" /> */}
         {/* <source src="/leave-video.webm" type="video/webm" /> */}
@@ -56,11 +56,11 @@ const VideoSection = () => {
         }}
       >
         <Typography variant="h2" component="h1" fontWeight="bold" gutterBottom>
-          Manage Your Free Days from Work
+          Streamline your leave management with our HR solution.
         </Typography>
         <Typography variant="h6" component="p" maxWidth="lg" margin="auto">
-          Keep track of your booked leave dates and request time off
-          effortlessly.
+          Simplify the process of booking leave days and ensure seamless
+          approvals and tracking for a more efficient workforce.
         </Typography>
       </Container>
 

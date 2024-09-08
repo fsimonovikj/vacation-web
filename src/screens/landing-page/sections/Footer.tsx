@@ -4,6 +4,9 @@ import { Box, Typography, Link } from "@mui/material";
 const Footer = () => {
   const [showFooter, setShowFooter] = useState(false);
 
+  const orange = "#ff5722";
+  const orangeHover = "#d75026";
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
@@ -31,7 +34,7 @@ const Footer = () => {
       <Box
         sx={{
           backgroundColor: "#fff",
-          py: { xs: 8, lg: 16 },
+          py: { xs: 8, lg: 24 },
           px: { xs: 4, lg: 12 },
           textAlign: "center",
           marginBottom: { xs: "390px", lg: "300px" },
@@ -50,6 +53,7 @@ const Footer = () => {
               maxWidth: { xs: "400px", lg: "960px" },
               textAlign: "center",
               fontWeight: "bold",
+              marginBottom: "3rem",
             }}
           >
             Cost-effective, reliable, and used by hundreds of companies today
@@ -60,12 +64,12 @@ const Footer = () => {
             rel="noopener noreferrer"
             sx={{
               textDecoration: "none",
-              backgroundColor: "#3f51b5",
+              backgroundColor: orange,
               color: "#fff",
               padding: "10px 24px",
               borderRadius: "50px",
               "&:hover": {
-                backgroundColor: "#303f9f",
+                backgroundColor: orangeHover,
               },
             }}
           >
@@ -77,7 +81,7 @@ const Footer = () => {
       {/* Footer Section */}
       <Box
         sx={{
-          backgroundColor: "#3f51b5",
+          backgroundColor: "#2d2d2d",
           color: "#fff",
           minHeight: { xs: "390px", lg: "300px" },
           position: "fixed",
@@ -174,7 +178,7 @@ const Footer = () => {
           </Box>
 
           {/* Footer Logo */}
-          <Box
+          {/* <Box
             sx={{
               position: "absolute",
               bottom: 0,
@@ -188,7 +192,7 @@ const Footer = () => {
               alt="Footer Logo"
               style={{ width: "100%" }}
             />
-          </Box>
+          </Box> */}
         </Box>
       </Box>
     </footer>
