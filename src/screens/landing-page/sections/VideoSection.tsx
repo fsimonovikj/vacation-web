@@ -14,7 +14,7 @@ const VideoSection = () => {
         playsInline
         className="video-background"
       >
-        <source src="/video/office.mp4" type="video/mp4" />
+        <source src="/video/young-boy.mp4" type="video/mp4" />
         <source src="/video/video.webm" type="video/webm" />
         Your browser does not support the video tag.
       </Box>

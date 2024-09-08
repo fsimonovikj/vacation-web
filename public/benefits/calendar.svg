@@ -1,0 +1,11 @@
+<svg width="56" height="56" viewBox="0 0 56 56" fill="none"
+    xmlns="http://www.w3.org/2000/svg">
+    <!-- Circle with transparent black fill -->
+    <path d="M0 28C0 12.536 12.536 0 28 0C43.464 0 56 12.536 56 28C56 43.464 43.464 56 28 56C12.536 56 0 43.464 0 28Z" fill="black" fill-opacity="0.1"/>
+
+    <!-- Calendar Icon -->
+    <path d="M20 20H36C37.1046 20 38 20.8954 38 22V36C38 37.1046 37.1046 38 36 38H20C18.8954 38 18 37.1046 18 36V22C18 20.8954 18.8954 20 20 20Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 17V22" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M33 17V22" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 26H38" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
