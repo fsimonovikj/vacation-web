@@ -1,20 +1,10 @@
 import React from "react";
 import { Box, Typography, Container } from "@mui/material";
+import "../styles/index.scss"; // Make sure to import your SCSS file
 
 const VideoSection = () => {
   return (
-    <Box
-      sx={{
-        position: "relative",
-        height: { xs: "600px", lg: "min(calc(100vh - 2rem), 2000px)" },
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        overflow: "hidden",
-        borderRadius: "30px",
-        margin: "16px",
-      }}
-    >
+    <Box className="video-section">
       {/* Video Background */}
       <Box
         component="video"
@@ -22,61 +12,26 @@ const VideoSection = () => {
         muted
         loop
         playsInline
-        sx={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-        }}
+        className="video-background"
       >
         <source src="/video/office.mp4" type="video/mp4" />
         <source src="/video/video.webm" type="video/webm" />
-        {/* <source src="/leave-video.mp4" type="video/mp4" /> */}
-        {/* <source src="/leave-video.webm" type="video/webm" /> */}
-        {/* <source
-          src="https://stream.mux.com/b00Wa3K4QrfmgUQjps01vkrgWCfCT4EVfXlr1eDWC00288/high.mp4"
-          type="video/mp4"
-        />
-        <source
-          src="https://stream.mux.com/b00Wa3K4QrfmgUQjps01vkrgWCfCT4EVfXlr1eDWC00288/high.webm"
-          type="video/webm"
-        /> */}
         Your browser does not support the video tag.
       </Box>
 
       {/* Overlay Text and Content */}
-      <Container
-        sx={{
-          position: "relative",
-          zIndex: 2,
-          color: "#fff",
-          textAlign: "center",
-        }}
-      >
-        <Typography variant="h2" component="h1" fontWeight="bold" gutterBottom>
+      <Container className="overlay-content">
+        <Typography className="overlay-heading" gutterBottom>
           Streamline your leave management with our HR solution.
         </Typography>
-        <Typography variant="h6" component="p" maxWidth="lg" margin="auto">
+        <Typography className="overlay-text">
           Simplify the process of booking leave days and ensure seamless
           approvals and tracking for a more efficient workforce.
         </Typography>
       </Container>
 
       {/* Gradient Overlay */}
-      <Box
-        sx={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          background:
-            "radial-gradient(77.84% 125.76% at 77.74% 0%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)",
-          zIndex: 1,
-        }}
-      />
+      <Box className="gradient-overlay" />
     </Box>
   );
 };

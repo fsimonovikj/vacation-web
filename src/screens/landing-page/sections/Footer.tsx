@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Link } from "@mui/material";
+import "../styles/index.scss"; // Import the styles
 
 const Footer = () => {
   const [showFooter, setShowFooter] = useState(false);
-
-  const orange = "#ff5722";
-  const orangeHover = "#d75026";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,49 +27,18 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer className="flex flex-col transition-all">
+    <footer className="footer">
       {/* Top Section */}
-      <Box
-        sx={{
-          backgroundColor: "#fff",
-          py: { xs: 8, lg: 24 },
-          px: { xs: 4, lg: 12 },
-          textAlign: "center",
-          marginBottom: { xs: "390px", lg: "300px" },
-          overflow: "hidden",
-        }}
-      >
-        <Box
-          className="mx-auto flex flex-col items-center gap-6 lg:gap-12 "
-          sx={{
-            display: "inline-block",
-          }}
-        >
-          <Typography
-            variant="h2"
-            sx={{
-              maxWidth: { xs: "400px", lg: "960px" },
-              textAlign: "center",
-              fontWeight: "bold",
-              marginBottom: "3rem",
-            }}
-          >
+      <Box className="top-section">
+        <Box className="content-container">
+          <Typography variant="h2" className="cta-heading">
             Cost-effective, reliable, and used by hundreds of companies today
           </Typography>
           <Link
             href="https://calendly.com/scriptrunner-sales/30min?month=2024-05"
             target="_blank"
             rel="noopener noreferrer"
-            sx={{
-              textDecoration: "none",
-              backgroundColor: orange,
-              color: "#fff",
-              padding: "10px 24px",
-              borderRadius: "50px",
-              "&:hover": {
-                backgroundColor: orangeHover,
-              },
-            }}
+            className="cta-button"
           >
             Get started
           </Link>
@@ -79,120 +46,40 @@ const Footer = () => {
       </Box>
 
       {/* Footer Section */}
-      <Box
-        sx={{
-          backgroundColor: "#2d2d2d",
-          color: "#fff",
-          minHeight: { xs: "390px", lg: "300px" },
-          position: "fixed",
-          bottom: 0,
-          left: "50%",
-          transform: "translateX(-50%)",
-          opacity: showFooter ? 1 : 0,
-          transition: "opacity 0.5s ease-in-out",
-          width: "100%",
-          zIndex: 10,
-        }}
-        className="footer-hide"
-      >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", lg: "row" },
-            justifyContent: "space-between",
-            alignItems: "center",
-            py: { xs: 8, lg: 16 },
-            px: { xs: 4, lg: 12 },
-            position: "relative",
-          }}
-        >
+      <Box className={`footer-section ${showFooter ? "visible" : ""}`}>
+        <Box className="content">
           {/* Footer Left Section */}
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <Box className="left-section">
             <Typography variant="body2">
               © 2024 OdmorCo Company. All rights reserved.
             </Typography>
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <Link
-                href="/privacy-policy"
-                sx={{
-                  textDecoration: "none",
-                  color: "#fff",
-                  "&:hover": {
-                    textDecoration: "underline",
-                  },
-                }}
-              >
-                Privacy Policy
-              </Link>
-            </Box>
+            <Link href="/privacy-policy" className="link">
+              Privacy Policy
+            </Link>
           </Box>
 
           {/* Footer Right Section */}
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            <Link
-              href="mailto:sales@odmor.co"
-              sx={{
-                textDecoration: "none",
-                color: "#fff",
-                display: "flex",
-                alignItems: "center",
-                "&:hover": {
-                  textDecoration: "underline",
-                },
-              }}
-            >
+          <Box className="right-section">
+            <Link href="mailto:sales@odmor.co" className="link">
               sales@odmor.co
             </Link>
             <Link
               href="https://calendly.com/scriptrunner-sales/30min?month=2024-05"
               target="_blank"
               rel="noopener noreferrer"
-              sx={{
-                textDecoration: "none",
-                color: "#fff",
-                display: "flex",
-                alignItems: "center",
-                "&:hover": {
-                  textDecoration: "underline",
-                },
-              }}
+              className="link"
             >
               Book a demo
             </Link>
             <Link
-              href="https://www.linkedin.com/company/scriptrunnerai"
+              href="https://www.linkedin.com/company/odmorco"
               target="_blank"
               rel="noopener noreferrer"
-              sx={{
-                textDecoration: "none",
-                color: "#fff",
-                display: "flex",
-                alignItems: "center",
-                "&:hover": {
-                  textDecoration: "underline",
-                },
-              }}
+              className="link"
             >
-              Linkedin
+              LinkedIn
             </Link>
           </Box>
-
-          {/* Footer Logo */}
-          {/* <Box
-            sx={{
-              position: "absolute",
-              bottom: 0,
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: "100%",
-            }}
-          >
-            <img
-              src="/icons/footer-logo.svg"
-              alt="Footer Logo"
-              style={{ width: "100%" }}
-            />
-          </Box> */}
         </Box>
       </Box>
     </footer>
