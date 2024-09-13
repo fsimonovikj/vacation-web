@@ -12,6 +12,8 @@ import { UserRole } from "./interfaces/types";
 import Users from "./screens/users/Users";
 import { useAuth } from "./auth/core/Auth";
 import LandingPage from "./screens/landing-page/LandingPage";
+import LeaveRequests from "./screens/leave-requests/LeaveRequests";
+import Reports from "./screens/reports/Reports";
 
 function App() {
   const { user } = useAuth();
@@ -30,7 +32,9 @@ function App() {
               <>
                 <Route path="/main" element={<MainScreen />} />
                 <Route path="/management" element={<Management />} />
+                <Route path="/leave-requests" element={<LeaveRequests />} />
                 <Route path="/users" element={<Users />} />
+                <Route path="/reports" element={<Reports />} />
               </>
             ) : (
               <Route path="/main" element={<MainScreen />} />

@@ -100,6 +100,20 @@ class CodefixClient {
     return response;
   }
 
+  async receiveLeaveRequests(): Promise<any> {
+    const response = await axiosApi
+      .get(`${webConfig.apiBaseUrl}/booking-days/leave-requests`)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error("Error fetching leave requests:", error);
+        return [];
+      });
+
+    return response;
+  }
+
   async requestBookingDays(event: BookingRequestI): Promise<any> {
     try {
       const request = await axiosApi.post(

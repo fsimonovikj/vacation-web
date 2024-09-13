@@ -225,8 +225,8 @@ const VacationBooking = () => {
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           headerToolbar={{
-            left: "prev,next",
-            center: "title",
+            left: "title",
+            // center: "title",
             right: "today",
           }}
           initialDate={new Date()}

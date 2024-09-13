@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { AppPathEnum } from "../../enums/path-enum";
 import { UserRole, VacationI } from "../../interfaces/types";
 import { useAuth } from "../../auth/core/Auth";
-import { capitalizeFirstLetter } from "../../core/utils/utils";
+import { capitalizedAndFormatPath } from "../../core/utils/utils";
 import CodefixClient from "../../services/CodefixClient";
 import "../../styles/header.scss";
 import UserInfo from "./UserInfo";
@@ -54,7 +54,9 @@ export const Header = () => {
             if (user && user.role === UserRole.Admin) {
               return Object.values(AppPathEnum).map((path) => (
                 <li key={path} onClick={toggleMenu}>
-                  <a href={path}>{capitalizeFirstLetter(path.split("/")[1])}</a>
+                  <a href={path}>
+                    {capitalizedAndFormatPath(path.split("/")[1])}
+                  </a>
                 </li>
               ));
             } else if (user && user.role === UserRole.User) {
@@ -63,7 +65,7 @@ export const Header = () => {
                   return (
                     <li key={path} onClick={toggleMenu}>
                       <a href={path}>
-                        {capitalizeFirstLetter(path.split("/")[1])}
+                        {capitalizedAndFormatPath(path.split("/")[1])}
                       </a>
                     </li>
                   );
@@ -109,7 +111,7 @@ export const Header = () => {
                       }`}
                       href={path}
                     >
-                      {capitalizeFirstLetter(path.split("/")[1])}
+                      {capitalizedAndFormatPath(path.split("/")[1])}
                     </a>
                   </li>
                 ));
@@ -129,7 +131,7 @@ export const Header = () => {
                           }`}
                           href={path}
                         >
-                          {capitalizeFirstLetter(path.split("/")[1])}
+                          {capitalizedAndFormatPath(path.split("/")[1])}
                         </a>
                       </li>
                     );

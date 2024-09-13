@@ -44,6 +44,13 @@ export const getLocalizedMessage = (messages: any) => {
   return messages[localisation] || messages["en"]; // Default to 'en' if locale not found
 };
 
+export const capitalizedAndFormatPath = (path: string): string => {
+  return path
+    .split("-")
+    .map((word) => capitalizeFirstLetter(word))
+    .join(" ");
+};
+
 export const capitalizeFirstLetter = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
