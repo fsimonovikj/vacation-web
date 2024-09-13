@@ -5,6 +5,7 @@ $dark-gray: #888;
 $background-color: #f5f5f5;
 $mobile: 480px;
 $tablet: 768px;
+$desktop: 1024px;
 .main-screen-vacation {
     position: absolute;
     left: 20%;
@@ -36,7 +37,7 @@ $tablet: 768px;
     }
 }
 
-.modal-container {
+.book-modal-container {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -46,6 +47,18 @@ $tablet: 768px;
     box-shadow: 24px;
     padding: 40px;
     border-radius: 12px;
+    @media (max-width: $mobile) {
+        width: 70% !important;
+        // padding: 20px !important;
+    }
+    @media (max-width: $tablet) {
+        width: 30% !important;
+        // padding: 20px !important;
+    }
+    @media (min-width: $desktop) {
+        width: 40% !important;
+        // padding: 20px !important;
+    }
 }
 
 .modal-title {
@@ -55,7 +68,7 @@ $tablet: 768px;
     padding-bottom: 1rem;
 }
 
-.preview-section {
+.preview-section-modal {
     margin-bottom: 1.5rem;
     text-align: center;
     .preview-text {

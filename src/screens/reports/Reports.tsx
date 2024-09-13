@@ -158,7 +158,7 @@ const Reports = () => {
         <Box p={4}>
           {/* Tabs for switching between Summary and User Vacation Details */}
           <Tabs
-            sx={{ marginBottom: 3, borderBottom: "1px solid gray" }}
+            sx={{ marginBottom: 3, borderBottom: "1px solid #dddddd" }}
             value={tabIndex}
             onChange={handleTabChange}
             aria-label="report tabs"
@@ -213,7 +213,7 @@ const Reports = () => {
             ) : (
               <Grid item xs={12} md={12} lg={12}>
                 <TextField
-                  label="Search by user name"
+                  label="Search by name"
                   variant="outlined"
                   fullWidth
                   value={searchTerm}

@@ -27,7 +27,7 @@ const VacationRequestModal: React.FC<VacationRequestModalProps> = ({
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
     >
-      <Box className="modal-container">
+      <Box className="book-modal-container">
         <Typography
           id="modal-title"
           variant="h5"
@@ -39,7 +39,7 @@ const VacationRequestModal: React.FC<VacationRequestModalProps> = ({
         </Typography>
 
         {/* Preview Section */}
-        <Box className="preview-section">
+        <Box className="preview-section-modal">
           <Typography variant="body1" className="preview-text">
             <strong>Start Date:</strong>{" "}
             {selectedInfo
