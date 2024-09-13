@@ -1,30 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import { Typography, Button, Box } from "@mui/material";
-
 import "../styles/index.scss";
 
 const PreviewImageSection = () => {
-  const [scrollPosition, setScrollPosition] = useState("initial");
+  const [intersectionRatio, setIntersectionRatio] = useState(0); // Track the exact intersection ratio
   const sectionRef = useRef<HTMLDivElement | null>(null); // Ensure the ref is typed correctly
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
-        const intersectionRatio = entry.intersectionRatio;
-
-        if (intersectionRatio >= 0.6) {
-          setScrollPosition("final");
-        } else if (intersectionRatio >= 0.3) {
-          setScrollPosition("intermediate");
-        } else {
-          setScrollPosition("initial");
-        }
+        setIntersectionRatio(entry.intersectionRatio); // Directly track the ratio
       },
-      { threshold: [0, 0.3, 0.6] }
+      { threshold: Array.from({ length: 101 }, (_, i) => i / 100) } // Use fine-grained thresholds from 0 to 1
     );
 
-    const currentSectionRef = sectionRef.current; // Copy the current value of sectionRef
+    const currentSectionRef = sectionRef.current;
 
     if (currentSectionRef) {
       observer.observe(currentSectionRef);
@@ -37,14 +28,11 @@ const PreviewImageSection = () => {
     };
   }, []);
 
+  // Function to calculate smooth transformations
   const getTransformStyle = () => {
-    if (scrollPosition === "final") {
-      return "scale(1.1) rotateX(0deg)";
-    } else if (scrollPosition === "intermediate") {
-      return "scale(1.05) rotateX(10deg)";
-    } else {
-      return "scale(1) rotateX(20deg)";
-    }
+    const scale = 1 + 0.1 * intersectionRatio; // Scale from 1 to 1.1
+    const rotateX = 20 - 20 * intersectionRatio; // RotateX from 20deg to 0deg
+    return `scale(${scale}) rotateX(${rotateX}deg)`;
   };
 
   return (
@@ -54,14 +42,11 @@ const PreviewImageSection = () => {
         <div
           className="inner-box"
           style={{
-            transform: getTransformStyle(),
+            transform: getTransformStyle(), // Apply smooth transformation
+            transition: "transform 0.2s ease-out", // Smooth transition
           }}
         >
-          <img
-            src="https://cdn.sanity.io/images/69a0nmw1/production/abde3626e50b38190694cce42822e1f8a7706b93-3840x2770.png"
-            alt="App screen"
-            className="image"
-          />
+          <img src="images/tablet.webp" alt="App screen" className="image" />
         </div>
       </div>
 
