@@ -1,3 +1,6 @@
+$mobile: 480px;
+$tablet: 768px;
+$desktop: 1024px;
 // Video Section
 .video-section {
     position: relative;
@@ -70,6 +73,11 @@
         padding-bottom: 16rem;
         max-width: 80%;
     }
+    @media (max-width: $mobile) {
+        padding-top: 8rem !important;
+        padding-bottom: 3rem !important;
+        max-width: 80%;
+    }
 }
 
 .perspective-box {
@@ -91,7 +99,7 @@
     height: 16rem;
     overflow: hidden;
     border-radius: 20px;
-    box-shadow: 0px 20px 40px rgba(45, 45, 45, 0.15), 0px 30px 60px rgba(45, 45, 45, 0.25);
+    box-shadow: 10px 20px 40px rgba(45, 45, 45, 0.30), 0px 30px 60px rgba(45, 45, 45, 0.40);
     @media (min-width: 600px) {
         height: 25rem;
     }
@@ -186,13 +194,21 @@
         margin-bottom: 12rem;
     }
     .caption {
-        font-size: 20px !important;
+        font-size: 16px !important;
         color: #ff5722;
         margin-bottom: 1rem;
+        @media (min-width: 1024px) {
+            font-size: 20px !important;
+            margin-bottom: 2rem;
+        }
     }
     .title {
+        font-size: 2rem !important;
         font-weight: bold;
         color: #333;
+        @media (min-width: 1024px) {
+            font-size: 3rem !important;
+        }
     }
 }
 
@@ -310,6 +326,106 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+    }
+}
+
+// F&Q Section
+// FAQ
+.faq-header {
+    color: #ff5722;
+    margin-bottom: 1;
+    font-size: 16px !important;
+    margin: auto !important;
+    width: 80%;
+    @media (min-width: 1024px) {
+        margin: 0 !important;
+        font-size: 20px !important;
+    }
+}
+
+.faq-header-title {
+    font-size: 2rem !important;
+    font-weight: bold !important;
+    line-height: 1 !important;
+    color: #333;
+    margin-bottom: 2rem !important;
+    width: 80%;
+    margin: auto !important;
+    @media (min-width: 1024px) {
+        margin: 0 !important;
+        font-size: 48px !important;
+    }
+}
+
+.faq-header-description {
+    color: rgba(0, 0, 0, .4);
+    margin-bottom: 2rem !important;
+    max-width: 80%;
+    margin: auto !important;
+    padding-top: 1rem;
+    // margin-left: auto;
+    // margin-right: auto;
+    font-size: 1rem !important;
+    @media (min-width: 1024px) {
+        margin: 0 !important;
+        font-size: 1.3rem !important;
+        margin-bottom: 8rem;
+        max-width: 80%;
+    }
+}
+
+.faq-accordion-container {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+    margin: auto !important;
+    text-align: center;
+    @media (min-width: 1024px) {
+        padding-top: 16rem;
+        padding-bottom: 16rem;
+        // max-width: 80%;
+    }
+    .faq-accordion-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin: auto;
+        @media (min-width: 1024px) {
+            gap: 2rem;
+        }
+    }
+    .faq-question {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: none;
+        &::before {
+            display: none;
+        }
+    }
+    .faq-accordion-summary {
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: #333;
+        padding: 16px;
+        @media (min-width: 1024px) {
+            font-size: 1.5rem;
+        }
+    }
+    .faq-accordion-title {
+        text-align: left;
+        font-size: 16px;
+        color: #333;
+        @media (min-width: 1024px) {
+            font-size: 20px;
+        }
+    }
+    .faq-accordion-details {
+        text-align: left;
+        font-size: 13px;
+        color: rgba(0, 0, 0, .6);
+        padding: 8px;
+        @media (min-width: 1024px) {
+            font-size: 16px;
+        }
     }
 }
 
@@ -448,6 +564,63 @@
                     }
                 }
             }
+        }
+    }
+}
+
+// Header Section
+.landing-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem;
+    position: fixed;
+    top: 32px;
+    z-index: 20;
+    width: calc(100% - 4rem);
+    left: 1.5rem;
+    min-width: calc(100% - 4rem);
+    border-radius: 9999px; // For rounded full effect
+    background-color: rgba(0, 0, 0, .1); // Semi-transparent background
+    backdrop-filter: blur(24px); // Blur effect for the background
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); // For elevation
+    color: #fff;
+    transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+    transform: translateY(0); // Default to visible
+    @media (min-width: 1024px) {
+        min-width: 300px;
+        width: 50% !important;
+        left: 25% !important;
+        padding: 0.5rem 1.5rem;
+    }
+    &.hidden {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    .logo {
+        color: #fff;
+        text-decoration: none;
+        font-size: 1rem; // Text size for logo
+        font-weight: bold;
+        @media (min-width: 1024px) {
+            font-size: 1.5rem; // Text size for logo
+        }
+    }
+    .demo-button {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.3rem 0.7rem;
+        background-color: #000000; // Blue background
+        color: #fff;
+        border-radius: 9999px; // Rounded full effect
+        transition: background-color 0.3s ease-in-out;
+        text-decoration: none;
+        @media (min-width: 1024px) {
+            padding: 0.7rem 1.5rem;
+        }
+        &:hover {
+            background-color: #232323; // Darker blue on hover
         }
     }
 }

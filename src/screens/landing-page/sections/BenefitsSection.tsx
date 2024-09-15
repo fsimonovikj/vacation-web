@@ -48,7 +48,7 @@ const BenefitsSection = () => {
           BENEFITS
         </Typography>
         <Typography variant="h3" className="title">
-          Streamline Your Vacation Booking Process
+          Streamline your vacation booking process
         </Typography>
       </Box>
 
