@@ -51,6 +51,15 @@ export const capitalizedAndFormatPath = (path: string): string => {
     .join(" ");
 };
 
+export const formatEnumKey = (enumKey: string) => {
+  // Replace underscores with spaces and capitalize each word
+  return enumKey
+    .toLowerCase()
+    .split("_")
+    .map((word) => capitalizeFirstLetter(word))
+    .join(" ");
+};
+
 export const capitalizeFirstLetter = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };

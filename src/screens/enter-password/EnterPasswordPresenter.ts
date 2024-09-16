@@ -39,7 +39,7 @@ const EnterPasswordPresenter = (): ViewModel => {
         if (response) {
           saveAuth(response);
           saveUser(response.user);
-          navigate("/main");
+          navigate("/calendar");
         } else {
           setError("Invalid credentials");
         }

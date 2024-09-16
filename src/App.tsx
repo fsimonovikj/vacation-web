@@ -22,7 +22,7 @@ function App() {
     <>
       <ToastNotification />
       <ThemeProvider theme={theme}>
-        {user && user.role !== UserRole.Admin && <Navigate to="/main" />}
+        {user && user.role !== UserRole.Admin && <Navigate to="/calendar" />}
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/sign-in" element={<SignInScreen />} />
@@ -30,14 +30,14 @@ function App() {
           <Route path="/" element={<ProtectRoutes />}>
             {user && user.role === UserRole.Admin ? (
               <>
-                <Route path="/main" element={<MainScreen />} />
+                <Route path="/calendar" element={<MainScreen />} />
                 <Route path="/management" element={<Management />} />
                 <Route path="/leave-requests" element={<LeaveRequests />} />
-                <Route path="/users" element={<Users />} />
+                <Route path="/employees" element={<Users />} />
                 <Route path="/reports" element={<Reports />} />
               </>
             ) : (
-              <Route path="/main" element={<MainScreen />} />
+              <Route path="/calendar" element={<MainScreen />} />
             )}
           </Route>
         </Routes>

@@ -1,7 +1,9 @@
 export enum AppPathEnum {
-  MAIN = "/main",
+  CALENDAR = "/calendar",
   MANAGEMENT = "/management",
   LEAVE_REQUESTS = "/leave-requests",
-  USERS = "/users",
-  REPORTS = "/reports",
+  EMPLOYEES = "/employees",
+  REPORTS_AND_ANALITICS = "/reports",
 }
+
+export type AppPathEnumType = keyof typeof AppPathEnum;
