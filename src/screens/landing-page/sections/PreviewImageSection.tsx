@@ -46,7 +46,11 @@ const PreviewImageSection = () => {
             transition: "transform 0.2s ease-out", // Smooth transition
           }}
         >
-          <img src="images/tablet.webp" alt="App screen" className="image" />
+          <img
+            src="images/tablet-mockup.webp"
+            alt="App screen"
+            className="image"
+          />
         </div>
       </div>
 
