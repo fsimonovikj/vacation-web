@@ -11,7 +11,6 @@ import Management from "./screens/management/Management";
 import { UserRole } from "./interfaces/types";
 import Users from "./screens/users/Users";
 import { useAuth } from "./auth/core/Auth";
-import LandingPage from "./screens/landing-page/LandingPage";
 import LeaveRequests from "./screens/leave-requests/LeaveRequests";
 import Reports from "./screens/reports/Reports";
 
@@ -24,7 +23,7 @@ function App() {
       <ThemeProvider theme={theme}>
         {user && user.role !== UserRole.Admin && <Navigate to="/calendar" />}
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<SignInScreen />} />
           <Route path="/sign-in" element={<SignInScreen />} />
           <Route path="/enter-password" element={<EnterPassword />} />
           <Route path="/" element={<ProtectRoutes />}>
