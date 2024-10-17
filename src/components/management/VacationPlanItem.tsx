@@ -20,12 +20,13 @@ import {
 import EditVacationModal from "./EditVacationModal";
 import CodefixClient from "../../services/CodefixClient";
 import AddUserToVacationModal from "./AddUserToVacationModal";
+import { useAuth } from "../../auth/core/Auth";
 
 interface VacationPlanItemProps {
   vacation: VacationPlanI;
   isOpen: boolean;
   onToggle: () => void;
-  onUpdated: () => void;
+  onUpdated: (companyId: string) => void;
 }
 
 const VacationPlanItem: React.FC<VacationPlanItemProps> = ({
@@ -37,6 +38,7 @@ const VacationPlanItem: React.FC<VacationPlanItemProps> = ({
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserViewModel | null>(null);
   const client = new CodefixClient();
+  const { user } = useAuth();
 
   const handleEditClick = (user: UserViewModel) => {
     setSelectedUser(user);
@@ -52,7 +54,7 @@ const VacationPlanItem: React.FC<VacationPlanItemProps> = ({
     try {
       await client.updateVacationDays(req);
 
-      onUpdated();
+      onUpdated(user!.companyId ?? "");
       handleCloseModal();
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -63,7 +65,7 @@ const VacationPlanItem: React.FC<VacationPlanItemProps> = ({
   const handleCloseAddUserModal = () => setModalOpen(false);
 
   const handleUserAdded = () => {
-    onUpdated();
+    onUpdated(user!.companyId ?? "");
   };
 
   return (

@@ -33,7 +33,7 @@ const LandingHeader = () => {
       className={`landing-header ${!isVisible ? "hidden" : ""}`}
     >
       <a href="/" className="logo">
-        OdmorCO
+        ODMORCO
       </a>
       <a
         className="demo-button"

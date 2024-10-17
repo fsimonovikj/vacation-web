@@ -87,6 +87,11 @@ const VacationBooking = () => {
       return;
     }
 
+    console.log(
+      `new Date(vacations[0].startAt)`,
+      new Date(vacations[0].startAt)
+    );
+    console.log(`new date`, new Date());
     if (vacations && new Date(vacations[0].startAt) > new Date()) {
       toast.error(getLocalizedMessage(BOOKING_BEFORE_START_VACATION));
       return;

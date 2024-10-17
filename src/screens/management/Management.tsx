@@ -11,6 +11,7 @@ import CreateVacationModal, {
 } from "../../components/management/CreateVacationModal";
 import VacationPlanItem from "../../components/management/VacationPlanItem";
 import CreateHolidayModal from "../../components/management/CreateHolidayModal";
+import { useAuth } from "../../auth/core/Auth";
 
 const Management = () => {
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
@@ -18,11 +19,14 @@ const Management = () => {
   const [openVacation, setOpenVacation] = useState(false);
   const [openHoliday, setOpenHoliday] = useState(false);
   const client = new CodefixClient();
+  const { user } = useAuth();
 
   useEffect(() => {
     (async () => {
       try {
-        const vacationPlan = await client.receiveVacationPlan();
+        const vacationPlan = await client.receiveVacationPlan(
+          user!.companyId ?? ""
+        );
 
         console.log(`vacationPlan`, vacationPlan);
         setVacationPlan(vacationPlan);
@@ -57,7 +61,7 @@ const Management = () => {
         deletedAt: null,
       };
 
-      await client.requestVacationPlan(newVacationPlan);
+      await client.requestVacationPlan(newVacationPlan, user!.companyId ?? "");
 
       setVacationPlan((prevPlans) => [...prevPlans, newVacationPlan]);
 
@@ -128,9 +132,9 @@ const Management = () => {
     setOpenHoliday(false);
   };
 
-  const onUpdated = async () => {
+  const onUpdated = async (companyId: string) => {
     try {
-      const vacationPlan = await client.receiveVacationPlan();
+      const vacationPlan = await client.receiveVacationPlan(companyId);
 
       setVacationPlan(vacationPlan);
     } catch (error) {

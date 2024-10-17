@@ -153,10 +153,10 @@ class CodefixClient {
     }
   }
 
-  async receiveVacationPlan(): Promise<any> {
+  async receiveVacationPlan(companyId: string): Promise<any> {
     try {
       const response = await axiosApi.get(
-        `${webConfig.apiBaseUrl}/vacation-plan/details`
+        `${webConfig.apiBaseUrl}/vacation-plan/details/${companyId}`
       );
 
       return response.data;
@@ -165,10 +165,13 @@ class CodefixClient {
     }
   }
 
-  async receiveAvailableUsersForVacation(vacationId: string): Promise<any> {
+  async receiveAvailableUsersForVacation(
+    vacationId: string,
+    companyId: string
+  ): Promise<any> {
     const response = await axiosApi
       .get(
-        `${webConfig.apiBaseUrl}/vacation-plan/available-users/${vacationId}`
+        `${webConfig.apiBaseUrl}/vacation-plan/available-users/${vacationId}/${companyId}`
       )
       .then((response) => {
         return response.data;
@@ -181,10 +184,13 @@ class CodefixClient {
     return response;
   }
 
-  async requestVacationPlan(event: VacationPlanRequestI): Promise<any> {
+  async requestVacationPlan(
+    event: VacationPlanRequestI,
+    companyId: string
+  ): Promise<any> {
     try {
       const request = await axiosApi.post(
-        `${webConfig.apiBaseUrl}/vacation-plan`,
+        `${webConfig.apiBaseUrl}/vacation-plan/${companyId}`,
         event
       );
 
@@ -196,11 +202,12 @@ class CodefixClient {
 
   async requestAddUsersToVacation(
     vacationId: string,
-    userIds: string[]
+    userIds: string[],
+    companyId: string
   ): Promise<any> {
     try {
       const request = await axiosApi.post(
-        `${webConfig.apiBaseUrl}/vacation-plan/add-users/${vacationId}`,
+        `${webConfig.apiBaseUrl}/vacation-plan/add-users/${vacationId}/${companyId}`,
         userIds
       );
 

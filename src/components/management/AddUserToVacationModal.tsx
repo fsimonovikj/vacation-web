@@ -12,6 +12,7 @@ import {
   Box,
 } from "@mui/material";
 import CodefixClient from "../../services/CodefixClient";
+import { useAuth } from "../../auth/core/Auth";
 
 interface AddUserToVacationModalProps {
   open: boolean;
@@ -29,13 +30,15 @@ const AddUserToVacationModal: React.FC<AddUserToVacationModalProps> = ({
   const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [selectAll, setSelectAll] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchUsers = async () => {
       const client = new CodefixClient();
       try {
         const availableUsers = await client.receiveAvailableUsersForVacation(
-          vacationId
+          vacationId,
+          user?.companyId ?? ""
         );
         setUsers(availableUsers);
       } catch (error) {
@@ -67,7 +70,11 @@ const AddUserToVacationModal: React.FC<AddUserToVacationModalProps> = ({
   const handleSave = async () => {
     try {
       const client = new CodefixClient();
-      await client.requestAddUsersToVacation(vacationId, selectedUsers);
+      await client.requestAddUsersToVacation(
+        vacationId,
+        selectedUsers,
+        user?.companyId ?? ""
+      );
       onUserAdded();
       setUsers([]);
       onClose();
