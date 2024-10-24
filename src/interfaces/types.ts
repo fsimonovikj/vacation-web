@@ -106,6 +106,7 @@ export interface EventI {
   allDay: boolean;
   classNames: string;
   status?: any;
+  display?: "background" | "inverse-background" | "none" | "";
 }
 
 export interface VacationI {

@@ -7,11 +7,11 @@ import "./styles/index.scss";
 const MainScreen = () => {
   return (
     <>
-      <Box className="main-screen-vacation">
-        <VacationBooking />
-      </Box>
       <Box className="main-screen-header">
         <Header />
+      </Box>
+      <Box className="main-screen-vacation">
+        <VacationBooking />
       </Box>
     </>
   );

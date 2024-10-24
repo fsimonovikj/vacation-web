@@ -28,34 +28,85 @@ const VacationRequestModal: React.FC<VacationRequestModalProps> = ({
       aria-describedby="modal-description"
     >
       <Box className="book-modal-container">
-        <Typography
-          id="modal-title"
-          variant="h5"
-          component="h2"
-          gutterBottom
-          className="modal-title"
-        >
-          Vacation Details
-        </Typography>
+        <Box className="modal-header">
+          <Typography
+            id="modal-title"
+            variant="h5"
+            component="h5"
+            gutterBottom
+            className="modal-title"
+          >
+            ODMORCO
+          </Typography>
+          <Typography
+            id="modal-description"
+            variant="body1"
+            component="p"
+            gutterBottom
+            className="modal-description"
+          >
+            Please check the dates before you submit the request.
+          </Typography>
+        </Box>
 
         {/* Preview Section */}
         <Box className="preview-section-modal">
-          <Typography variant="body1" className="preview-text">
-            <strong>Start Date:</strong>{" "}
-            {selectedInfo
-              ? new Date(selectedInfo.startStr).toLocaleDateString()
-              : ""}
+          <Typography variant="body1" className="preview-text" gutterBottom>
+            You requested leave from
           </Typography>
-          <Typography variant="body1" className="preview-text">
-            <strong>End Date:</strong>{" "}
-            {selectedInfo
-              ? new Date(
-                  selectedInfo.endStr || selectedInfo.startStr
-                ).toLocaleDateString()
-              : ""}
-          </Typography>
-          <Typography variant="body1" className="preview-text">
-            <strong>Total Days:</strong> {selectedInfo ? selectedInfo.count : 0}
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="left"
+            marginBottom="0.5rem"
+          >
+            <Typography
+              variant="h6"
+              component="span"
+              className="vacation-date"
+              style={{
+                marginRight: "0.3rem",
+              }}
+            >
+              {selectedInfo
+                ? new Date(selectedInfo.startStr).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "long",
+                  })
+                : ""}
+            </Typography>
+            <Typography
+              variant="body1"
+              component="span"
+              style={{ marginRight: "0.3rem" }}
+            >
+              to
+            </Typography>
+            <Typography variant="h6" component="span" className="vacation-date">
+              {selectedInfo
+                ? new Date(
+                    selectedInfo.endStr || selectedInfo.startStr
+                  ).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "long",
+                  })
+                : ""}
+            </Typography>
+          </Box>
+          <Typography
+            variant="body1"
+            className="preview-text"
+            style={{ marginTop: "0.5rem" }}
+          >
+            Total:{" "}
+            <span
+              style={{
+                // color: $primary - color,
+                fontWeight: "bold",
+              }}
+            >
+              {selectedInfo ? selectedInfo.count : 0} days
+            </span>
           </Typography>
         </Box>
 
@@ -63,7 +114,7 @@ const VacationRequestModal: React.FC<VacationRequestModalProps> = ({
           autoFocus
           fullWidth
           multiline
-          rows={4}
+          rows={3}
           variant="outlined"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -71,11 +122,11 @@ const VacationRequestModal: React.FC<VacationRequestModalProps> = ({
           className="text-field"
         />
         <Box className="modal-actions">
+          <Button variant="contained" onClick={onSave} className="save-button">
+            Confirm
+          </Button>
           <Button onClick={onClose} className="cancel-button">
             Cancel
-          </Button>
-          <Button variant="contained" onClick={onSave} className="save-button">
-            Send Request
           </Button>
         </Box>
       </Box>

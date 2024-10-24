@@ -12,11 +12,13 @@ $desktop: 1024px;
     top: 0;
     width: 80%;
     height: 100%;
+    min-height: auto;
     background-color: #f5f5f5;
     @media (max-width: $tablet) {
         left: 0;
         width: 100%;
         top: 55px;
+        height: auto;
         /* Adjust based on the height of the hamburger menu */
     }
 }
@@ -27,6 +29,7 @@ $desktop: 1024px;
     top: 0;
     width: 20%;
     height: 100%;
+    min-height: auto;
     background-color: #1c1c1c;
     color: white;
     @media (max-width: $tablet) {
@@ -42,38 +45,71 @@ $desktop: 1024px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 400px;
+    width: 90%;
+    max-width: 450px;
     background-color: $background-color;
-    box-shadow: 24px;
-    padding: 40px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    padding: 32px;
     border-radius: 12px;
+    text-align: center;
     @media (max-width: $mobile) {
-        width: 70% !important;
-        // padding: 20px !important;
+        width: 80%;
+        padding: 24px;
     }
     @media (max-width: $tablet) {
-        width: 30% !important;
-        // padding: 20px !important;
+        width: 80%;
+        padding: 28px;
     }
     @media (min-width: $desktop) {
-        width: 40% !important;
-        // padding: 20px !important;
+        width: 40%;
+    }
+}
+
+.modal-header {
+    border-bottom: 2px solid $light-gray;
+    padding-bottom: 0.75rem;
+    @media (max-width: $tablet) {
+        padding-bottom: 0.5rem;
     }
 }
 
 .modal-title {
-    font-weight: bold;
-    text-align: center;
+    text-align: left;
+    font-size: 1.5rem;
     color: $secondary-color;
-    padding-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    @media (max-width: $tablet) {
+        font-size: 1.25rem;
+    }
+}
+
+.modal-description {
+    font-size: 0.9rem;
+    color: #666;
+    text-align: left;
+    @media (max-width: $tablet) {
+        font-size: 0.8rem;
+    }
 }
 
 .preview-section-modal {
+    margin-top: 1.5rem;
     margin-bottom: 1.5rem;
-    text-align: center;
+    text-align: left;
     .preview-text {
         font-size: 1rem;
         color: #666;
+        @media (max-width: $tablet) {
+            font-size: 0.9rem;
+        }
+    }
+    .vacation-date {
+        font-size: 1.2rem;
+        color: $primary-color;
+        font-weight: bold;
+        @media (max-width: $tablet) {
+            font-size: 1.1rem;
+        }
     }
 }
 
@@ -94,20 +130,38 @@ $desktop: 1024px;
 
 .modal-actions {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    @media (max-width: $desktop) {
+        justify-content: space-between;
+        align-items: center;
+    }
+    @media (min-width: $desktop) {
+        float: right;
+    }
     margin-top: 1.5rem;
+    .cancel-button,
+    .save-button {
+        width: 48%;
+        padding: 10px 16px;
+        font-size: 1rem;
+        @media (max-width: $tablet) {
+            width: 45%;
+            font-size: 0.9rem;
+        }
+        @media (min-width: $desktop) {
+            margin: 0 5px;
+        }
+    }
     .cancel-button {
-        color: #555;
-        text-transform: none;
+        background-color: transparent;
+        border: 1px solid $light-gray;
+        color: $dark-gray;
+        border-radius: 8px;
     }
     .save-button {
         background-color: $primary-color;
         color: #fff;
         border-radius: 8px;
-        padding: 8px 16px;
         box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
-        text-transform: none;
         &:hover {
             background-color: darken($primary-color, 10%);
         }

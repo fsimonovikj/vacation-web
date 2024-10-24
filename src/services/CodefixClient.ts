@@ -280,6 +280,30 @@ class CodefixClient {
     }
   }
 
+  async approveVacation(id: string): Promise<any> {
+    try {
+      const request = await axiosApi.get(
+        `${webConfig.apiBaseUrl}/approve?bookingId=${id}`
+      );
+
+      return request;
+    } catch (error) {
+      throw new Error("Error approving vacation");
+    }
+  }
+
+  async rejectVacation(id: string): Promise<any> {
+    try {
+      const request = await axiosApi.get(
+        `${webConfig.apiBaseUrl}/reject?bookingId=${id}`
+      );
+
+      return request;
+    } catch (error) {
+      throw new Error("Error rejecting vacation");
+    }
+  }
+
   //TODO: Modified function for the reset user password
   //   async resetPassword(email: string): Promise<void> {
   //     await this.request(`${this.BASE_URL}/reset-password`, 'POST', {}, { email });

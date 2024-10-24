@@ -45,12 +45,14 @@ const LeaveRequests = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleApprove = (id: string) => {
-    console.log(`Approving request with id: ${id}`);
+  const handleApprove = async (id: string) => {
+    await client.approveVacation(id);
+    window.location.reload();
   };
 
-  const handleReject = (id: string) => {
-    console.log(`Rejecting request with id: ${id}`);
+  const handleReject = async (id: string) => {
+    await client.rejectVacation(id);
+    window.location.reload();
   };
 
   return (
@@ -61,6 +63,11 @@ const LeaveRequests = () => {
       </Box>
       <Box className="leave-request-content">
         <Box className="leave-request-list">
+          {requests.length === 0 && (
+            <Typography variant="h5" className="no-requests">
+              No leave requests found...
+            </Typography>
+          )}
           {requests.map((request) => (
             <Box key={request.id} className="leave-request-item">
               <Box className="request-left">

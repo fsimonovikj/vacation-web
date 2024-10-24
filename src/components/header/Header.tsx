@@ -10,6 +10,7 @@ import {
 import CodefixClient from "../../services/CodefixClient";
 import "../../styles/header.scss";
 import UserInfo from "./UserInfo";
+import { useNavigate } from "react-router-dom";
 
 export const Header = () => {
   const [vacationDays, setVacationDays] = useState<number>(0);
@@ -17,6 +18,7 @@ export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const activeMenu = window.location.pathname;
   const client = new CodefixClient();
+  const navigate = useNavigate();
   const { user } = useAuth();
 
   useEffect(() => {
@@ -120,6 +122,7 @@ export const Header = () => {
               type="button"
               className="header-top-user-details-button"
               onClick={() => {
+                navigate("/settings");
                 // Logic to open a modal or navigate to user details page
                 // Example: openModal() or navigate("/user-details")
               }}

@@ -13,6 +13,7 @@ import Users from "./screens/users/Users";
 import { useAuth } from "./auth/core/Auth";
 import LeaveRequests from "./screens/leave-requests/LeaveRequests";
 import Reports from "./screens/reports/Reports";
+import SettingsScreen from "./screens/settings/SettingsScreen";
 
 function App() {
   const { user } = useAuth();
@@ -27,16 +28,15 @@ function App() {
           <Route path="/sign-in" element={<SignInScreen />} />
           <Route path="/enter-password" element={<EnterPassword />} />
           <Route path="/" element={<ProtectRoutes />}>
-            {user && user.role === UserRole.Admin ? (
+            <Route path="/calendar" element={<MainScreen />} />
+            <Route path="/settings" element={<SettingsScreen />} />
+            {user && user.role === UserRole.Admin && (
               <>
-                <Route path="/calendar" element={<MainScreen />} />
                 <Route path="/management" element={<Management />} />
                 <Route path="/leave-requests" element={<LeaveRequests />} />
                 <Route path="/employees" element={<Users />} />
                 <Route path="/reports" element={<Reports />} />
               </>
-            ) : (
-              <Route path="/calendar" element={<MainScreen />} />
             )}
           </Route>
         </Routes>

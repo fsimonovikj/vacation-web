@@ -58,6 +58,7 @@ const VacationBooking = () => {
           ...holidays.map((event: EventI) => ({
             ...event,
             classNames: ["holiday-event"],
+            display: "background",
           })),
         ];
         setEvents(allEvents);
@@ -86,6 +87,8 @@ const VacationBooking = () => {
       toast.error(getLocalizedMessage(CANNOT_BOOK_IN_MOMENT));
       return;
     }
+
+    console.log(`SELECT INFO`, selectInfo);
 
     console.log(
       `new Date(vacations[0].startAt)`,
@@ -163,14 +166,15 @@ const VacationBooking = () => {
       toast.error("Please enter a description for your vacation.");
       return;
     }
+    console.log(`SELECTED INFO`, selectedInfo);
 
     if (selectedInfo && user) {
       const newEvent = {
         id: uuidV4(),
         title: user.firstName + " " + user.lastName,
         description: description,
-        start: selectedInfo.start,
-        end: selectedInfo.end || selectedInfo.start,
+        start: selectedInfo.startStr,
+        end: selectedInfo.endStr || selectedInfo.startStr,
         userId: user.id,
         allDay: true,
         bookedDays: selectedInfo.count,
@@ -232,7 +236,7 @@ const VacationBooking = () => {
           headerToolbar={{
             left: "title",
             // center: "title",
-            right: "today",
+            right: "prev,next today",
           }}
           initialDate={new Date()}
           businessHours={true}

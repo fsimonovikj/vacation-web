@@ -64,8 +64,8 @@ $tablet: 768px;
 }
 
 .holiday-event {
-    background-color: rgba(124, 133, 140, 0.88);
-    color: white;
+    background-color: rgba(124, 140, 127, 0.88);
+    color: black;
     border: none;
     border-radius: 5px;
     padding: 7px 5px;
@@ -109,4 +109,12 @@ $tablet: 768px;
         padding: 1px 3px;
         font-size: 0.7rem;
     }
+}
+
+.fc-col-header {
+    overflow-x: auto;
+    overflow-y: hidden;
+    background-color: #2A2A2A !important;
+    color: #fff;
+    font-size: 22px !important;
 }
