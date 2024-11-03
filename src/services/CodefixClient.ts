@@ -231,14 +231,14 @@ class CodefixClient {
 
   async updateUser(event: UserViewModel): Promise<any> {
     try {
-      const request = await axiosApi.put(
+      const request = await axiosApi.patch(
         `${webConfig.apiBaseUrl}/users`,
         event
       );
 
       return request;
     } catch (error) {
-      throw new Error("Error updating user");
+      toast.error((error as any).response.data.message);
     }
   }
 

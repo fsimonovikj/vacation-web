@@ -6,6 +6,8 @@ import {
   TextField,
   Button,
   Typography,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import "./../../screens/settings/styles/index.scss";
@@ -13,13 +15,18 @@ import { useAuth } from "../../auth/core/Auth";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import toast from "react-hot-toast";
+import CodefixClient from "../../services/CodefixClient";
+import { UserRole } from "../../interfaces/types";
+import { capitalizeFirstLetter } from "../../core/utils/utils";
 
 const ProfileSettings = () => {
-  const { user } = useAuth();
+  const { user, saveUser } = useAuth();
+  const client = new CodefixClient();
 
   const [firstName, setFirstName] = useState(user?.firstName);
   const [lastName, setLastName] = useState(user?.lastName);
   const [email, setEmail] = useState(user?.email);
+  const [role, setRole] = useState(user?.role);
   // eslint-disable-next-line
   const [profileImage, setProfileImage] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -49,18 +56,22 @@ const ProfileSettings = () => {
     setFirstName(user?.firstName);
     setLastName(user?.lastName);
     setEmail(user?.email);
+    setRole(user?.role);
     setIsEditing(false);
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     // Logic to update the profile details
     const updatedUser = {
+      ...user,
       firstName,
       lastName,
-      email,
+      role,
     };
-    // Call backend API to update the user profile
-    console.log("Updated user data:", updatedUser);
+    await client.updateUser(updatedUser).then(async () => {
+      await saveUser(updatedUser);
+      toast.success("Profile updated successfully");
+    });
 
     // On successful update, exit edit mode
     setIsEditing(false);
@@ -77,12 +88,27 @@ const ProfileSettings = () => {
     setIsChangingPassword(false);
   };
 
-  const handleUpdatePassword = () => {
+  const handleUpdatePassword = async () => {
     if (newPassword !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
     }
-    const passwordData = { currentPassword, newPassword };
+    const passwordData = {
+      ...user,
+      currentPassword,
+      newPassword,
+    };
+
+    await client.updateUser(passwordData).then(async (res) => {
+      if (res && res.data) {
+        await saveUser({
+          ...user,
+          password: newPassword,
+        });
+        toast.success("Password updated successfully");
+      }
+    });
+
     console.log("Password change data:", passwordData);
     setIsChangingPassword(false);
   };
@@ -150,7 +176,7 @@ const ProfileSettings = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 fullWidth
                 className="form-field"
-                disabled={!isEditing}
+                disabled
               />
               <TextField
                 label="Company Name"
@@ -160,14 +186,30 @@ const ProfileSettings = () => {
                 className="form-field"
                 disabled
               />
-              <TextField
-                label="Account Role"
-                variant="outlined"
-                value="Admin" // Hardcoded for now
-                fullWidth
-                className="form-field"
-                disabled
-              />
+              {isEditing ? (
+                <Select
+                  label="Account Role"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value as any)}
+                  fullWidth
+                  className="form-field"
+                >
+                  {Object.values(UserRole).map((role) => (
+                    <MenuItem key={role} value={role}>
+                      {capitalizeFirstLetter(role)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              ) : (
+                <TextField
+                  label="Account Role"
+                  variant="outlined"
+                  value={capitalizeFirstLetter(role || "")}
+                  fullWidth
+                  className="form-field"
+                  disabled
+                />
+              )}
             </Box>
             <Box className="form-actions">
               {isEditing ? (

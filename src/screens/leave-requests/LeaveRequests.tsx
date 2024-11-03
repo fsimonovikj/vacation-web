@@ -7,6 +7,7 @@ import {
   ListItemAvatar,
   Avatar,
   ListItemText,
+  CircularProgress,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -15,8 +16,9 @@ import CodefixClient from "../../services/CodefixClient";
 import "./styles/index.scss";
 import { Header } from "../../components/header/Header";
 import BeachAccessIcon from "@mui/icons-material/BeachAccess";
+import LeaveRequestDetailsDialog from "./LeaveRequestDetailsDialog";
 
-interface Request {
+export interface Request {
   id: string;
   createdAt: string;
   title: string;
@@ -31,6 +33,9 @@ interface Request {
 
 const LeaveRequests = () => {
   const [requests, setRequests] = useState<Request[]>([]);
+  const [selectedRequest, setSelectedRequest] = useState<Request | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [loading, setLoading] = useState<string | null>(null);
   const client = new CodefixClient();
 
   useEffect(() => {
@@ -46,13 +51,38 @@ const LeaveRequests = () => {
   }, []);
 
   const handleApprove = async (id: string) => {
+    setLoading(id);
     await client.approveVacation(id);
-    window.location.reload();
+    setLoading(null);
+    setIsDialogOpen(false);
+    refreshRequests();
   };
 
   const handleReject = async (id: string) => {
+    setLoading(id);
     await client.rejectVacation(id);
-    window.location.reload();
+    setLoading(null);
+    setIsDialogOpen(false);
+    refreshRequests();
+  };
+
+  const openDetailsDialog = (request: Request) => {
+    setSelectedRequest(request);
+    setIsDialogOpen(true);
+  };
+
+  const closeDetailsDialog = () => {
+    setIsDialogOpen(false);
+    setSelectedRequest(null);
+  };
+
+  const refreshRequests = async () => {
+    try {
+      const requests = await client.receiveLeaveRequests();
+      setRequests(requests);
+    } catch (error) {
+      console.error("Error refreshing leave requests:", error);
+    }
   };
 
   return (
@@ -69,7 +99,11 @@ const LeaveRequests = () => {
             </Typography>
           )}
           {requests.map((request) => (
-            <Box key={request.id} className="leave-request-item">
+            <Box
+              key={request.id}
+              className="leave-request-item"
+              onClick={() => openDetailsDialog(request)}
+            >
               <Box className="request-left">
                 <Box className="request-buttons">
                   {/* Status */}
@@ -86,17 +120,21 @@ const LeaveRequests = () => {
                         color="primary"
                         onClick={() => handleApprove(request.id)}
                       >
-                        <CheckCircleIcon
-                          sx={{
-                            fontSize: {
-                              xs: "1.5rem",
-                              sm: "1.5rem",
-                              md: "2.0rem",
-                              lg: "2.5rem",
-                              xl: "3.0rem",
-                            },
-                          }}
-                        />
+                        {loading === request.id ? (
+                          <CircularProgress size={24} color="inherit" />
+                        ) : (
+                          <CheckCircleIcon
+                            sx={{
+                              fontSize: {
+                                xs: "1.5rem",
+                                sm: "1.5rem",
+                                md: "2.0rem",
+                                lg: "2.5rem",
+                                xl: "3.0rem",
+                              },
+                            }}
+                          />
+                        )}
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Cancel the request" placement="top">
@@ -104,17 +142,21 @@ const LeaveRequests = () => {
                         color="error"
                         onClick={() => handleReject(request.id)}
                       >
-                        <CancelIcon
-                          sx={{
-                            fontSize: {
-                              xs: "1.5rem",
-                              sm: "1.5rem",
-                              md: "2.0rem",
-                              lg: "2.5rem",
-                              xl: "3.0rem",
-                            },
-                          }}
-                        />
+                        {loading === request.id ? (
+                          <CircularProgress size={24} color="inherit" />
+                        ) : (
+                          <CancelIcon
+                            sx={{
+                              fontSize: {
+                                xs: "1.5rem",
+                                sm: "1.5rem",
+                                md: "2.0rem",
+                                lg: "2.5rem",
+                                xl: "3.0rem",
+                              },
+                            }}
+                          />
+                        )}
                       </IconButton>
                     </Tooltip>
                   </Box>
@@ -174,6 +216,14 @@ const LeaveRequests = () => {
           ))}
         </Box>
       </Box>
+
+      <LeaveRequestDetailsDialog
+        open={isDialogOpen}
+        onClose={closeDetailsDialog}
+        request={selectedRequest}
+        onApprove={handleApprove}
+        onReject={handleReject}
+      />
     </>
   );
 };
