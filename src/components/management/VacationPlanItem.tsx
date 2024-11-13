@@ -21,6 +21,7 @@ import EditVacationModal from "./EditVacationModal";
 import CodefixClient from "../../services/CodefixClient";
 import AddUserToVacationModal from "./AddUserToVacationModal";
 import { useAuth } from "../../auth/core/Auth";
+import { format } from "date-fns";
 
 interface VacationPlanItemProps {
   vacation: VacationPlanI;
@@ -39,6 +40,8 @@ const VacationPlanItem: React.FC<VacationPlanItemProps> = ({
   const [selectedUser, setSelectedUser] = useState<UserViewModel | null>(null);
   const client = new CodefixClient();
   const { user } = useAuth();
+
+  console.log(`VACATION`, vacation);
 
   const handleEditClick = (user: UserViewModel) => {
     setSelectedUser(user);
@@ -93,16 +96,18 @@ const VacationPlanItem: React.FC<VacationPlanItemProps> = ({
         <span className="vacation-plan-days">{vacation.days} days</span>
         {isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
       </MuiTypography>
+      <MuiTypography
+        sx={{
+          color: "text.secondary",
+          fontSize: 10,
+        }}
+      >
+        {format(new Date(vacation.start), "dd/MM/yyyy")} -{" "}
+        {format(new Date(vacation.end), "dd/MM/yyyy")}
+      </MuiTypography>
 
       <Collapse in={isOpen}>
-        <Box
-          display="flex"
-          flexWrap="wrap"
-          gap={2}
-          sx={{
-            marginTop: 3,
-          }}
-        >
+        <Box display="flex" flexWrap="wrap" gap={2}>
           <Box
             sx={{
               width: "100%",

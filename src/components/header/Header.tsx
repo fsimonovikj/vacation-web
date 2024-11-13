@@ -102,12 +102,17 @@ export const Header = () => {
         <Box className="header-top">
           <Avatar
             alt={user?.firstName}
-            src={
-              "https://ashallendesign.ams3.cdn.digitaloceanspaces.com/rMbsGOyK6i1KjNkbXff8qLohzM1nWQA8HNGwHF0J.png"
-            }
+            // src={
+            //   "https://ashallendesign.ams3.cdn.digitaloceanspaces.com/rMbsGOyK6i1KjNkbXff8qLohzM1nWQA8HNGwHF0J.png"
+            // }
             // src={"/default-avatar.png"} // Placeholder or default avatar
             className="header-top-avatar" // Avatar size
-          />
+            style={{
+              backgroundColor: "#696969",
+            }}
+          >
+            {user?.firstName?.charAt(0).toUpperCase() || ""}
+          </Avatar>
           <Box ml={2} className="header-top-user-info">
             <Typography className="header-top-user-info-name">
               {capitalizeFirstLetter(user?.firstName as string)}
