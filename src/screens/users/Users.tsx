@@ -49,6 +49,7 @@ const Users = () => {
         department: (event.target as any).department.value,
         companyId: user!.companyId,
         status: UserStatus.Active,
+        type: (event.target as any).type.value,
       };
 
       await client.requestUser(newUser);

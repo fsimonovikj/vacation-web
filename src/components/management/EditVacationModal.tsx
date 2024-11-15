@@ -78,6 +78,14 @@ const EditVacationModal: React.FC<EditVacationModalProps> = ({
           />
           <TextField
             margin="dense"
+            label="Vacation Type"
+            type="text"
+            value={user.type}
+            disabled
+            fullWidth
+          />
+          <TextField
+            margin="dense"
             id="days"
             name="days"
             label="Remaining Days"

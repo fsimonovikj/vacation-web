@@ -59,6 +59,7 @@ const Management = () => {
         days: vacationData.days,
         createdAt: new Date(),
         deletedAt: null,
+        type: vacationData.type,
       };
 
       await client.requestVacationPlan(newVacationPlan, user!.companyId ?? "");

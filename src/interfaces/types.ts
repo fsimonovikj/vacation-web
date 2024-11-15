@@ -15,6 +15,7 @@ export interface UserViewModel {
   department?: UserDepartment;
   status?: UserStatus;
   role?: UserRole;
+  type?: VacationType;
 }
 
 export interface InstalledProducts {
@@ -82,6 +83,11 @@ export enum UserDepartment {
   Other = "other",
 }
 
+export enum VacationType {
+  MACEDONIA = "Macedonia",
+  GERMAN = "German",
+}
+
 export interface User {
   id?: string;
   firstName?: string;
@@ -129,6 +135,7 @@ export interface VacationPlanI {
   end: Date;
   days: number;
   details?: UserPlanDetailsI[];
+  type: VacationType;
 }
 
 export interface UserPlanDetailsI {

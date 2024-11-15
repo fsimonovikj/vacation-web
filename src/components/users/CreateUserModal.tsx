@@ -11,7 +11,7 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import { UserDepartment, UserRole } from "../../interfaces/types";
+import { UserDepartment, UserRole, VacationType } from "../../interfaces/types";
 
 interface CreateUserModalProps {
   open: boolean;
@@ -73,6 +73,23 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({
               {Object.values(UserRole).map((roleValue) => (
                 <MenuItem key={roleValue} value={roleValue}>
                   {roleValue.charAt(0).toUpperCase() + roleValue.slice(1)}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl margin="dense" fullWidth>
+            <InputLabel id="type-label">Vacation Type</InputLabel>
+            <Select
+              label="Vacation Type"
+              id="type"
+              name="type"
+              required
+              fullWidth
+            >
+              {Object.values(VacationType).map((vacationType) => (
+                <MenuItem key={vacationType} value={vacationType}>
+                  {vacationType}
                 </MenuItem>
               ))}
             </Select>

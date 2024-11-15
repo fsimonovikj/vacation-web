@@ -13,7 +13,7 @@ import {
 import { UserViewModel } from "../../interfaces/types";
 import "../../screens//users/styles/index.scss";
 import EditIcon from "@mui/icons-material/Edit";
-import EditUserModal from "./EditUserModa";
+import EditUserModal from "./EditUserModal";
 import CodefixClient from "../../services/CodefixClient";
 
 interface UsersTableProps {
@@ -70,6 +70,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ users, onUpdated }) => {
               <TableCell>Email</TableCell>
               <TableCell>Department</TableCell>
               <TableCell>Role</TableCell>
+              <TableCell>Vacation Type</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Edit</TableCell>
             </TableRow>
@@ -90,6 +91,11 @@ const UsersTable: React.FC<UsersTableProps> = ({ users, onUpdated }) => {
                   {user.role
                     ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
                     : "User"}
+                </TableCell>
+                <TableCell>
+                  {user.type
+                    ? user.type.charAt(0).toUpperCase() + user.type.slice(1)
+                    : "Other"}
                 </TableCell>
                 <TableCell>
                   {user.status

@@ -19,6 +19,7 @@ import {
   UserRole,
   UserStatus,
   UserViewModel,
+  VacationType,
 } from "../../interfaces/types"; // Ensure you import the UserViewModel type
 import DeactivateUserConfirmationDialog from "./DeactivateUserConfirmationModal";
 
@@ -43,6 +44,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
   const [role, setRole] = useState(user.role);
   const [status, setStatus] = useState(user.status);
   const [department, setDepartment] = useState(user.department);
+  const [type, setType] = useState(user.type);
   const [isDeactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -55,6 +57,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
       role,
       status,
       department,
+      type,
     };
     onSubmit(updatedData);
   };
@@ -126,6 +129,23 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
                 {Object.values(UserRole).map((roleValue) => (
                   <MenuItem key={roleValue} value={roleValue}>
                     {roleValue.charAt(0).toUpperCase() + roleValue.slice(1)}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl margin="dense" fullWidth>
+              <InputLabel id="role-label">Vacation Type</InputLabel>
+              <Select
+                label="Vacation Type"
+                id="type"
+                value={type}
+                onChange={(e) => setType(e.target.value as VacationType)}
+                required
+              >
+                {Object.values(VacationType).map((vacationType) => (
+                  <MenuItem key={vacationType} value={vacationType}>
+                    {vacationType}
                   </MenuItem>
                 ))}
               </Select>

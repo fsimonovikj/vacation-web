@@ -6,16 +6,22 @@ import {
   DialogTitle,
   TextField,
   Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { VacationType } from "../../interfaces/types";
 
 export interface VacationData {
   title: string;
   start: Date;
   end: Date;
   days: number;
+  type: VacationType;
 }
 
 interface CreateVacationModalProps {
@@ -33,10 +39,11 @@ const CreateVacationModal: React.FC<CreateVacationModalProps> = ({
   const [start, setStartDate] = useState<Date | null>(null);
   const [end, setEndDate] = useState<Date | null>(null);
   const [days, setDays] = useState<number | null>(null);
+  const [type, setType] = useState<VacationType | null>(null);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!start || !end || !days) {
+    if (!start || !end || !days || !type) {
       return;
     }
     const vacationData: VacationData = {
@@ -44,7 +51,10 @@ const CreateVacationModal: React.FC<CreateVacationModalProps> = ({
       start,
       end,
       days,
+      type,
     };
+
+    console.log(`VACATION DATA`, vacationData);
     onSubmit(vacationData);
     onClose();
   };
@@ -92,6 +102,22 @@ const CreateVacationModal: React.FC<CreateVacationModalProps> = ({
               }}
             />
           </LocalizationProvider>
+
+          <FormControl fullWidth margin="dense" required>
+            <InputLabel id="type-label">Vacation Type</InputLabel>
+            <Select
+              labelId="type-label"
+              id="type"
+              value={type}
+              onChange={(e) => setType(e.target.value as VacationType)}
+            >
+              {Object.values(VacationType).map((vacationType) => (
+                <MenuItem key={vacationType} value={vacationType}>
+                  {vacationType}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
           <TextField
             margin="dense"
