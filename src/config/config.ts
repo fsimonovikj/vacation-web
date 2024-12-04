@@ -7,19 +7,19 @@ let env: any = process.env.REACT_APP_ENVIRONMENT ?? "production";
 let webConfig: AdminWebConfig;
 
 switch (env) {
-  case "local":
+  case "development":
     webConfig = {
-      apiBaseUrl: "http://localhost:3000",
+      apiBaseUrl: process.env.REACT_APP_BACKEND_URL ?? "http://localhost:3000",
     };
     break;
   case "production":
     webConfig = {
-      apiBaseUrl: process.env.REACT_APP_BACKEND_URL ?? "",
+      apiBaseUrl: process.env.REACT_APP_BACKEND_URL ?? "http://localhost:3000",
     };
     break;
   default:
     webConfig = {
-      apiBaseUrl: "http://localhost:3000",
+      apiBaseUrl: process.env.REACT_APP_BACKEND_URL ?? "http://localhost:3000",
     };
 }
 
