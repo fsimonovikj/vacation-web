@@ -1,6 +1,6 @@
 import "./App.css";
 import { ThemeProvider } from "@mui/material/styles";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import theme from "./components/theme";
 import SignInScreen from "./screens/sign-in/SignInScreen";
 import EnterPassword from "./screens/enter-password/EnterPassword";

@@ -47,6 +47,7 @@ const AddUserToVacationModal: React.FC<AddUserToVacationModalProps> = ({
     };
 
     fetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vacationId, open]);
 
   const handleUserToggle = (userId: string) => {
