@@ -22,7 +22,6 @@ function App() {
     <>
       <ToastNotification />
       <ThemeProvider theme={theme}>
-        {user && user.role !== UserRole.Admin && <Navigate to="/calendar" />}
         <Routes>
           <Route path="/" element={<SignInScreen />} />
           <Route path="/sign-in" element={<SignInScreen />} />

@@ -7,4 +7,9 @@ export enum AppPathEnum {
   SETTINGS = "/settings",
 }
 
+export const USER_VISIBILITY_PATHS = [
+  AppPathEnum.CALENDAR,
+  AppPathEnum.SETTINGS,
+];
+
 export type AppPathEnumType = keyof typeof AppPathEnum;

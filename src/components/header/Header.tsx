@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Avatar, Box, Typography } from "@mui/material";
-import { AppPathEnum } from "../../enums/path-enum";
+import { AppPathEnum, USER_VISIBILITY_PATHS } from "../../enums/path-enum";
 import { UserRole, VacationI } from "../../interfaces/types";
 import { useAuth } from "../../auth/core/Auth";
 import {
@@ -152,47 +152,45 @@ export const Header = () => {
         <Box className="header-menu">
           <ul>
             {(() => {
-              if (user && user.role === UserRole.Admin) {
-                return Object.values(AppPathEnum).map((path) => (
-                  <li
-                    key={path}
-                    className={`header-menu-item ${
-                      activeMenu === path ? "active" : ""
-                    }`}
-                  >
-                    <a
-                      className={`header-link ${
-                        activeMenu === path ? "active" : "inactive"
+              if (user) {
+                if (user.role === UserRole.Admin) {
+                  // Admin sees all menu items
+                  return Object.values(AppPathEnum).map((path) => (
+                    <li
+                      key={path}
+                      className={`header-menu-item ${
+                        activeMenu === path ? "active" : ""
                       }`}
-                      href={path}
                     >
-                      {capitalizedAndFormatPath(path.split("/")[1])}
-                    </a>
-                  </li>
-                ));
-              } else if (user && user.role === UserRole.User) {
-                return Object.values(AppPathEnum).map((path) => {
-                  if (path === AppPathEnum.CALENDAR) {
-                    return (
-                      <li
-                        key={path}
-                        className={`header-menu-item ${
-                          activeMenu === path ? "active" : ""
+                      <a
+                        className={`header-link ${
+                          activeMenu === path ? "active" : "inactive"
                         }`}
+                        href={path}
                       >
-                        <a
-                          className={`header-link ${
-                            activeMenu === path ? "active" : "inactive"
-                          }`}
-                          href={path}
-                        >
-                          {capitalizedAndFormatPath(path.split("/")[1])}
-                        </a>
-                      </li>
-                    );
-                  }
-                  return null; // Hide other menu items for regular users
-                });
+                        {capitalizedAndFormatPath(path.split("/")[1])}
+                      </a>
+                    </li>
+                  ));
+                } else {
+                  return USER_VISIBILITY_PATHS.map((path) => (
+                    <li
+                      key={path}
+                      className={`header-menu-item ${
+                        activeMenu === path ? "active" : ""
+                      }`}
+                    >
+                      <a
+                        className={`header-link ${
+                          activeMenu === path ? "active" : "inactive"
+                        }`}
+                        href={path}
+                      >
+                        {capitalizedAndFormatPath(path.split("/")[1])}
+                      </a>
+                    </li>
+                  ));
+                }
               }
             })()}
           </ul>
