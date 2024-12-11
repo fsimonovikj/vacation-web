@@ -22,6 +22,7 @@ import { capitalizeFirstLetter } from "../../core/utils/utils";
 const ProfileSettings = () => {
   const { user, saveUser } = useAuth();
   const client = new CodefixClient();
+  const isAdmin = user?.role === UserRole.Admin;
 
   const [firstName, setFirstName] = useState(user?.firstName);
   const [lastName, setLastName] = useState(user?.lastName);
@@ -186,7 +187,7 @@ const ProfileSettings = () => {
                 className="form-field"
                 disabled
               />
-              {isEditing ? (
+              {isEditing && isAdmin ? (
                 <Select
                   label="Account Role"
                   value={role}
