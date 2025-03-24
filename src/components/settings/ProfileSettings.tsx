@@ -182,7 +182,7 @@ const ProfileSettings = () => {
               <TextField
                 label="Company Name"
                 variant="outlined"
-                value="Mozok" // Hardcoded for now
+                value="Odmor" // Hardcoded for now
                 fullWidth
                 className="form-field"
                 disabled
